@@ -3,11 +3,33 @@ from ..models import Storm, Advisory
 import datetime
 
 
+def normalize_time(timezone, datetime_obj):
+    timezones = {
+        'AST': -4,
+        'EST': -5,
+        'EDT': -4,
+        'CST': -6,
+        'CDT': -5,
+        'MST': -7,
+        'MDT': -6,
+        'PST': -8,
+        'PDT': -7,
+        'AKST': -9,
+        'AKDT': -8,
+        'HAST': -10,
+        'HADT': -9,
+    }
+    return datetime_obj +datetime.timedelta(hours =timezones[timezone]*-1 )
+
+
 def connect():
+    print("attempting to connect..")
     base_url = 'ftp.nhc.noaa.gov'
     ftp = ftplib.FTP(base_url)
     ftp.login()
+    print("logged in..")
     ftp.cwd('atcf/pub/')
+    print("switching directories")
 
     return ftp
 
@@ -18,13 +40,19 @@ def format_date(row):
     month =months.index(data[-3])+1
     day = int(data[-2])
     year = int(data[-1])
+    timezone = data[2]
+    am_pm = data[1]
     if len(data[0])==4:
         x = data[0][:2]
     else:
         x = data[0][0]
     hour = int(x)
+    if am_pm == 'AM':
+        pass
+    else:
+        hour+=12
 
-    return {'month':month, 'day':day, 'year':year, 'hour':hour}
+    return {'month':month, 'day':day, 'year':year, 'hour':hour, 'timezone':timezone}
 
 def format_location(row):
     coords = row.split('...')
@@ -50,18 +78,16 @@ def check_advisory(advisory_num, advisory_id, storm,):
             elif " 2017" in row and len(row.split()) == 7:
                 date_dict = format_date(row)
 
-
-
-
         print(date_dict)
 
+        cdt_time = normalize_time(date_dict['timezone'],datetime.datetime(date_dict['year'],
+                                                       date_dict['month'],
+                                                       date_dict['day'],
+                                                       date_dict['hour']))
 
         new_advisory = Advisory(advisory_id=advisory_id,
                                 stormid=storm,
-                                date=datetime.datetime(date_dict['year'],
-                                                       date_dict['month'],
-                                                       date_dict['day'],
-                                                       date_dict['hour']),
+                                date=cdt_time,
                                 storm_location=location,
                                 max_sus_wind=max_s_winds,
                                 content=("\n".join([line for line in fp])))
@@ -83,6 +109,10 @@ def check_storm(stormid):
         return newstorm
     else:
         return Storm.objects.get(stormid=stormid)
+
+
+
+
 
 
 def update_data():
