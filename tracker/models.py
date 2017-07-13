@@ -11,6 +11,9 @@ class Storm(models.Model):
 
     def __str__(self):
         return self.stormid
+
+    def return_id(self):
+        return self.stormid
 class Advisory(models.Model):
 
     category_choices =[(1,'Subtropical Depression'),
@@ -31,4 +34,9 @@ class Advisory(models.Model):
 
     def __str__(self):
         return "%s %s %s"%(self.stormid, self.date, self.advisory_id)
+
+    def image_link(self):
+        cyclone_num = self.stormid.return_id()
+        region = cyclone_num[0].upper()
+        return "%s%s"%(cyclone_num[2:4],region)
 

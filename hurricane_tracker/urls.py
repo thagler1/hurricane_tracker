@@ -18,5 +18,7 @@ from django.contrib import admin
 from tracker import views
 urlpatterns = [
     url(r'^$', views.update),
+    url(r'^stormdata/(?P<stormid>[a-z]{2}[0-9]{6})', views.stormdata),
     url(r'^admin/', admin.site.urls),
+
 ]

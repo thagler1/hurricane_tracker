@@ -11,5 +11,13 @@ def find_active_advisory():
     for adv in recent_advisories:
         storm.setdefault(adv.stormid, [])
         storm[adv.stormid].append(adv)
+    all_storms = Storm.objects.filter(active=True)
+
+    #itereate through all active storms then deactivate ones that do not have advisories
+    for event in all_storms:
+        if event.stormid not in storm:
+            event.active = False
+            event.save()
+
     return storm
 
