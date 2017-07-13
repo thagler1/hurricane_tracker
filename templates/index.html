@@ -131,11 +131,33 @@
                     <!-- /.row -->
                 </div>
 
+
+
+
+
             </div>
 
         </div>
         <!-- /.row -->
+            <div class="col-md-4">
+                                 <!-- Basin Activity well -->
+                <div class="well">
+                    <h4 style="text-align: center;">Basin Activity</h4>
+                    <div class="row">
+                        <div class="col-lg-12">
 
+                            <ul class="list-unstyled">
+                                {% for basin, count in basin_stats.items %}
+                                <li><a href="">{{ basin }}: {{ count }}</a>
+                                </li>
+                            {% endfor %}
+                            </ul>
+
+                        </div>
+
+                    <!-- /.row -->
+                </div>
+            </div>
         <hr>
 
         <!-- Footer -->

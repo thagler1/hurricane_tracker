@@ -2,6 +2,17 @@ from django.db import models
 
 # Create your models here.
 class Storm(models.Model):
+
+
+    basins = [('AL','North Atlantic basin...north of the Equator'),
+              ('SL','South Atlantic basin...south of the Equator'),
+              ('EP','North East Pacific basin...eastward of 140W'),
+              ('CP','North Central Pacific basin between the Dateline and 140W'),
+              ('WP' ,'North West Pacific basin...westward of the Dateline'),
+              ('IO','North Indian Ocean basin...north of the Equator between 40E and 100E'),
+              ('SH','South Pacific Ocean Basin and South Indian Ocean basin')]
+
+
     stormid = models.CharField(max_length=10)
     active = models.BooleanField(default=True)
     region = models.CharField(max_length=2)
@@ -18,6 +29,10 @@ class Storm(models.Model):
     def get_current_name(self):
         recent_adv = Advisory.objects.filter(stormid=self).order_by('-id')[0]
         return recent_adv.current_name
+
+    def basin_name(self):
+        b = [value for key, value in self.basins if key == self.region.upper()]
+        return b[0]
 
 class Advisory(models.Model):
 

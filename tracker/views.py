@@ -15,9 +15,11 @@ def update(request):
     active_storm = storm_query.find_active_advisory()
     inactive_storms = Storm.objects.filter(active=False)
     template = loader.get_template('index.html')
+    basin_stats = storm_query.basin_activity_stats()
     context ={
         'active_storm': active_storm,
-        'inactive_storms': inactive_storms
+        'inactive_storms': inactive_storms,
+        'basin_stats':basin_stats
     }
 
 
@@ -32,6 +34,7 @@ def stormdata(request, stormid):
     most_recent = Advisory.objects.filter(stormid=storm).order_by('-id')[0]
     storm_id_url = stormid[:4].upper()
     template = loader.get_template('posts.html')
+
     context ={
         'storm': storm,
         'advisories': advisories,

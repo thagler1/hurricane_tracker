@@ -75,6 +75,10 @@ def format_max_sustained_winds(row):
     trash, spd , km= row.split('...')
     return spd
 
+
+
+
+
 def check_advisory(advisory_num, advisory_id, storm,):
     if not Advisory.objects.filter(advisory_id=advisory_id).exists():
         # storm has been seen before, advisory has not. Add Advisory
