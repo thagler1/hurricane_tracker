@@ -31,6 +31,7 @@ class Advisory(models.Model):
     storm_location = models.CharField(max_length=10)
     max_sus_wind = models.CharField(max_length=10)
     category = models.IntegerField(choices=category_choices)
+    current_name = models.CharField(default=None, null=True, max_length=40)
 
     def __str__(self):
         return "%s %s %s"%(self.stormid, self.date, self.advisory_id)

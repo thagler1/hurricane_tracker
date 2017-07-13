@@ -7,9 +7,11 @@ import datetime
 def classify_storm(row):
     print(row)
     choices = Advisory.category_choices
-    category = [value for value, key in choices if key in row]
-    print(category)
-    return category[0]
+    category = [(value, key) for value, key in choices if key in row]
+    name = row[row.index(category[0][1])+len(category[0][1]):row.index('Advisory')]
+    name = name.rstrip()
+    name = name.lstrip()
+    return category[0][0], name
 
 
 
@@ -91,7 +93,8 @@ def check_advisory(advisory_num, advisory_id, storm,):
             elif " 2017" in row and len(row.split()) == 7:
                 date_dict = format_date(row)
             elif 'Advisory Number' in row:
-                category = classify_storm(row)
+                category, name = classify_storm(row)
+
 
 
 
@@ -106,6 +109,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
                                 storm_location=location,
                                 max_sus_wind=max_s_winds,
                                 category=category,
+                                current_name = name,
                                 content=("\n".join([line for line in fp])))
         new_advisory.save()
 
