@@ -3,6 +3,17 @@ from ..models import Storm, Advisory
 import datetime
 
 
+
+def classify_storm(row):
+    print(row)
+    choices = Advisory.category_choices
+    category = [value for value, key in choices if key in row]
+    print(category)
+    return category[0]
+
+
+
+
 def normalize_time(timezone, datetime_obj):
     timezones = {
         'AST': -4,
@@ -69,7 +80,9 @@ def check_advisory(advisory_num, advisory_id, storm,):
         ftp = connect()
         ftp.retrbinary('RETR ' + advisory_id, lambda s, w=fp.append: w(str(s)))
         ftp.close()
+        category = 0
         for i, row in enumerate(fp[0].split("\\n")):
+
             fp.append(row)
             if "LOCATION..." in row:
                 location = format_location(row)
@@ -77,8 +90,10 @@ def check_advisory(advisory_num, advisory_id, storm,):
                 max_s_winds = format_max_sustained_winds(row)
             elif " 2017" in row and len(row.split()) == 7:
                 date_dict = format_date(row)
+            elif 'Advisory Number' in row:
+                category = classify_storm(row)
 
-        print(date_dict)
+
 
         cdt_time = normalize_time(date_dict['timezone'],datetime.datetime(date_dict['year'],
                                                        date_dict['month'],
@@ -90,6 +105,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
                                 date=cdt_time,
                                 storm_location=location,
                                 max_sus_wind=max_s_winds,
+                                category=category,
                                 content=("\n".join([line for line in fp])))
         new_advisory.save()
 

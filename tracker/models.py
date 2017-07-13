@@ -12,6 +12,14 @@ class Storm(models.Model):
     def __str__(self):
         return self.stormid
 class Advisory(models.Model):
+
+    category_choices =[(1,'Subtropical Depression'),
+                       (2,'Tropical Depression'),
+                       (3,'Tropical Storm'),
+                       (4, 'Tropical Cyclone'),
+                       (5,'Hurricane'),
+                       (0,'Remnants Of')]
+
     advisory_id = models.CharField(max_length=20)
     stormid = models.ForeignKey(Storm)
     date = models.DateTimeField()
@@ -19,6 +27,7 @@ class Advisory(models.Model):
     advisory_number = models.CharField(max_length=4)
     storm_location = models.CharField(max_length=10)
     max_sus_wind = models.CharField(max_length=10)
+    category = models.IntegerField(choices=category_choices)
 
     def __str__(self):
         return "%s %s %s"%(self.stormid, self.date, self.advisory_id)

@@ -8,7 +8,7 @@ import datetime
 
 # Create your views here.
 def update(request):
-    #update_data()
+    update_data()
 
     active_storm = storm_query.find_active_advisory()
     template = loader.get_template('index.html')
