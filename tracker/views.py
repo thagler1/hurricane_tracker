@@ -11,7 +11,7 @@ def update(request):
     #update_data()
 
     active_storm = storm_query.find_active_advisory()
-    template = loader.get_template('posts.html')
+    template = loader.get_template('index.html')
     context ={
         'active_storm': active_storm
     }
