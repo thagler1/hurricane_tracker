@@ -72,13 +72,15 @@
 
                 <!-- Author -->
                 <p class="lead">
-                    Category:<a href="#">{{ most_recent.get_category_display }}</a>
+                    Category:<a href="#">{{ most_recent.get_category_display }}</a><br>
+                    Storm Id: {{ storm }}
+
                 </p>
 
                 <hr>
 
                 <!-- Date/Time -->
-                <p>As of {{ most_recent.date|date:"F j, y"}} at {{ most_recent.date|date:"P e" }}</p>
+                <p>As of {{ most_recent.date|date:"F j, Y"}} at {{ most_recent.date|date:"P e" }}</p>
 
                 <hr>
 

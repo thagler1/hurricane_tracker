@@ -14,6 +14,11 @@ class Storm(models.Model):
 
     def return_id(self):
         return self.stormid
+
+    def get_current_name(self):
+        recent_adv = Advisory.objects.filter(stormid=self).order_by('-id')[0]
+        return recent_adv.current_name
+
 class Advisory(models.Model):
 
     category_choices =[(1,'Subtropical Depression'),

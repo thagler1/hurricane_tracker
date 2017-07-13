@@ -102,7 +102,7 @@
                             {% if active_storm %}
                             <ul class="list-unstyled">
                                 {% for storm in active_storm %}
-                                <li><a href="/stormdata/{{ storm }}">{{ storm }}</a>
+                                <li><a href="/stormdata/{{ storm }}">{{ storm.get_current_name }}</a>
                                 </li>
                             {% endfor %}
                             </ul>
@@ -121,7 +121,7 @@
                             {% if active_storm %}
                             <ul class="list-unstyled">
                                 {% for storm in inactive_storms %}
-                                <li><a href="/stormdata/{{ storm }}">{{ storm }}</a>
+                                <li><a href="/stormdata/{{ storm }}">{{ storm.get_current_name }}</a>
                                 </li>
                             {% endfor %}
                             </ul>
