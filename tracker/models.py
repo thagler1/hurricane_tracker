@@ -8,13 +8,13 @@ from django.db import models
 class Storm(models.Model):
 
 
-    basins = [('AL','North Atlantic basin...north of the Equator'),
-              ('SL','South Atlantic basin...south of the Equator'),
-              ('EP','North East Pacific basin...eastward of 140W'),
-              ('CP','North Central Pacific basin between the Dateline and 140W'),
-              ('WP' ,'North West Pacific basin...westward of the Dateline'),
-              ('IO','North Indian Ocean basin...north of the Equator between 40E and 100E'),
-              ('SH','South Pacific Ocean Basin and South Indian Ocean basin')]
+    basins = [('AL','North Atlantic'),
+              ('SL','South Atlantic'),
+              ('EP','North East Pacific'),
+              ('CP','North Central Pacific'),
+              ('WP' ,'North West Pacific'),
+              ('IO','North Indian OceanE'),
+              ('SH','South Pacific Ocean')]
 
 
     stormid = models.CharField(max_length=10)
