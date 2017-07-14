@@ -87,9 +87,10 @@ def check_advisory(advisory_num, advisory_id, storm,):
         ftp.retrbinary('RETR ' + advisory_id, lambda s, w=fp.append: w(str(s)))
         ftp.close()
         category = 0
+        content = ""
         for i, row in enumerate(fp[0].split("\\n")):
 
-            fp.append(row)
+            content = "\n".join([content, row])
             if "LOCATION..." in row:
                 location = format_location(row)
             elif "MAXIMUM SUSTAINED WINDS..." in row:
@@ -114,7 +115,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
                                 max_sus_wind=max_s_winds,
                                 category=category,
                                 current_name = name,
-                                content=("\n".join([line for line in fp])))
+                                content=content)
         new_advisory.save()
 
 

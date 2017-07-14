@@ -54,7 +54,7 @@ class Advisory(models.Model):
     current_name = models.CharField(default=None, null=True, max_length=40)
 
     def __str__(self):
-        return "%s %s %s"%(self.stormid, self.date, self.advisory_id)
+        return "%s %s"%(self.current_name, self.advisory_id)
 
     def image_link(self):
         cyclone_num = self.stormid.return_id()

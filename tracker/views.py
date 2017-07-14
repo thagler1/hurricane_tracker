@@ -27,11 +27,11 @@ def update(request):
 
 
 def stormdata(request, stormid):
-    #update_data()
+    update_data()
 
     storm = Storm.objects.get(stormid=stormid)
-    advisories = Advisory.objects.filter(stormid=storm)
-    most_recent = Advisory.objects.filter(stormid=storm).order_by('-id')[0]
+    advisories = Advisory.objects.filter(stormid=storm).order_by('-id')
+    most_recent = Advisory.objects.filter(stormid=storm).order_by('date')[0]
     storm_id_url = stormid[:4].upper()
     template = loader.get_template('posts.html')
 
@@ -44,3 +44,15 @@ def stormdata(request, stormid):
 
 
     return HttpResponse(template.render(context, request))
+
+def advisory(request, advisory_id):
+    adv = Advisory.objects.get(advisory_id=advisory_id)
+
+
+    context ={
+        'adv': str(adv),
+    }
+    template = loader.get_template('advisory.html')
+
+    return HttpResponse(template.render(context, request))
+
