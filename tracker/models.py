@@ -1,5 +1,27 @@
 from django.db import models
+from django.utils.deconstruct import deconstructible
+import base64
+import os
+import PIL
 
+
+@deconstructible
+class PathAndRename(object):
+
+    def __init__(self, sub_path):
+        self.path = sub_path
+
+    def __call__(self, instance, filename):
+        ext = filename.split('.')[-1]
+        fn = filename.split('.')[0]
+        b = bytes(fn, 'utf-8')
+        file_name_string = base64.urlsafe_b64encode(b)
+        # set filename as random string
+        filename = '{}.{}'.format(file_name_string, ext)
+        # return the whole path to the file
+        return os.path.join(self.path, filename)
+
+path_and_rename = PathAndRename("")
 
 
 
@@ -15,6 +37,11 @@ class Storm(models.Model):
               ('WP' ,'North West Pacific'),
               ('IO','North Indian OceanE'),
               ('SH','South Pacific Ocean')]
+
+    image_keys=[
+        ('ep','EP'),
+        ('al','AT'),
+    ]
 
 
     stormid = models.CharField(max_length=10)
@@ -39,15 +66,26 @@ class Storm(models.Model):
         return b[0]
 
     def peak_intensity(self):
-        peak = Advisory.objects.filter(stormid=self.id).order_by('category')[0]
+        peak = Advisory.objects.filter(stormid=self.id).order_by('-category')[0]
         return peak.get_category_name()
 
     def last_observed(self):
         recent_adv = Advisory.objects.filter(stormid=self.id).order_by('-date')[0]
         return recent_adv.date
 
+    def current_wind(self):
+        current = Advisory.objects.filter(stormid=self.id).order_by('-date')[0]
+        return current.max_sus_wind
 
-
+    def image_url(self):
+        prefix = self.stormid[:2]
+        cc = self.stormid[2:4]
+        url = [value for key, value in self.image_keys if key==prefix]
+        print(url)
+        return ("%s%s"%(url[0],cc))
+    def max_wind_speed(self):
+        adv = Advisory.objects.filter(stormid=self.id).order_by('-max_sus_wind')[0]
+        return adv.max_sus_wind
 class Advisory(models.Model):
 
     category_choices =[(1,'Subtropical Depression'),
@@ -78,3 +116,14 @@ class Advisory(models.Model):
     def get_category_name(self):
         r = [value for key, value in self.category_choices if key == self.category ]
         return r[0]
+
+class Posts(models.Model):
+    image = models.ImageField(upload_to=path_and_rename,
+                                      blank=True,
+                                      null=True)
+    title = models.CharField(max_length=150)
+    content = models.TextField(blank=True, null=True)
+    author = models.CharField(max_length=75)
+
+    def __str__(self):
+        return self.title

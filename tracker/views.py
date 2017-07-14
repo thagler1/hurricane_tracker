@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from .utils import storm_query
 import datetime
-from .models import Storm, Advisory
+from .models import Storm, Advisory, Posts
 # Create your views here.
 
 
@@ -50,9 +50,17 @@ def advisory(request, advisory_id):
 
 
     context ={
-        'adv': str(adv),
+        'adv': adv,
     }
     template = loader.get_template('advisory.html')
 
     return HttpResponse(template.render(context, request))
 
+def about(request):
+    p = Posts.objects.get(title='About Tropical Strom Tracker')
+    context ={
+        'post':p
+    }
+    template = loader.get_template('about.html')
+
+    return HttpResponse(template.render(context, request))

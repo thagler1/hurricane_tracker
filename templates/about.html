@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+{%  load static %}
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>About</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href='{% static 'tracker/posts/vendor/bootstrap/css/bootstrap.min.css'%}' rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href={% static "tracker/posts/css/blog-post.css"%} rel="stylesheet">
+
+    <!-- Temporary navbar container fix -->
+    <style>
+    .navbar-toggler {
+        z-index: 1;
+    }
+
+    @media (max-width: 576px) {
+        nav > .container {
+            width: 100%;
+        }
+    }
+    </style>
+
+</head>
+
+<body>
+
+{% include 'postsnav.html' %}
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+
+            <!-- Post Content Column -->
+            <div class="col-lg-8">
+
+                <!-- Title -->
+                <h1 class="mt-4">{{ post.title }}</h1>
+
+                <!-- Author -->
+                <p class="lead">
+                    Developer:<a href="#">{{ post.author }}</a><br>
+                </p>
+                <hr>
+
+                <!-- Preview Image -->
+                <img class="img-fluid rounded" src="{{ post.image.url }}" style="width:900px;height:500px;" alt="">
+
+                <hr>
+
+                <!-- Post Content -->
+                <p>{{ post.content }}</p>
+
+
+
+                <hr>
+
+
+
+
+
+
+            </div>
+
+
+
+        </div>
+        <!-- /.row -->
+
+    </div>
+
+    <!-- /.container -->
+
+    <!-- Footer -->
+    <footer class="py-5 bg-inverse">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; Todd Hagler 2017</p>
+        </div>
+        <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src={% static "tracker/posts/vendor/jquery/jquery.min.js"%}></script>
+    <script src={% static "tracker/posts/vendor/tether/tether.min.js"%}></script>
+    <script src={% static "tracker/posts/vendor/bootstrap/js/bootstrap.min.js"%}></script>
+
+</body>
+
+</html>

@@ -16,10 +16,14 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from tracker import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     url(r'^$', views.update),
     url(r'^stormdata/(?P<stormid>[a-z]{2}[0-9]{6})', views.stormdata),
     url(r'^stormdata/advisory/(?P<advisory_id>.+)', views.advisory),
+    url(r'^About/', views.about),
     url(r'^admin/', admin.site.urls),
 
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

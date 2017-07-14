@@ -5,11 +5,10 @@
     <title>{{ adv }}</title>
 </head>
 <body>
-{% for line in adv.content %}
+{{ adv.content |linebreaks}}
 
-    {{ line }}
 
-{% endfor %}
+
 
 </body>
 </html>

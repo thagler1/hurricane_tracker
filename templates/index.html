@@ -46,7 +46,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="#">About</a>
+                        <a href="/About">About</a>
                     </li>
                     <li>
                         <a href="#">Data</a>
@@ -75,9 +75,8 @@
                 </h1>
 
                 <!-- First Blog Post -->
-                <h2>
-                    <a href="#">5 Day Outlook</a>
-                </h2>
+                    <p>5 Day Outlook</p>
+
 
                 <hr>
                 <img class="img-responsive"  src="http://www.nhc.noaa.gov/xgtwo/two_atl_5d0.png" style="width:900px;height:500px;">
@@ -102,7 +101,7 @@
                             {% if active_storm %}
                             <ul class="list-unstyled">
                                 {% for storm in active_storm %}
-                                <li><a href="/stormdata/{{ storm }}">{{ storm.peak_intensity }} {{ storm.get_current_name }}</a>
+                                <li><a href="/stormdata/{{ storm }}">{{ storm.peak_intensity }} {{ storm.get_current_name }}- Winds: {{ storm.current_wind }}</a>
                                 </li>
                             {% endfor %}
                             </ul>
@@ -148,7 +147,7 @@
 
                             <ul class="list-unstyled">
                                 {% for basin, count in basin_stats.items %}
-                                <li><a href="">{{ basin }}: {{ count }}</a>
+                                <li>{{ basin }}: {{ count }}
                                 </li>
                             {% endfor %}
                             </ul>
@@ -159,7 +158,8 @@
                 </div>
             </div>
         <hr>
-
+            </div>
+        </div>
         <!-- Footer -->
         <footer>
             <div class="row">
