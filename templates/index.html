@@ -98,11 +98,11 @@
                 <div class="well">
                     <h4 style="text-align: center;">Active Storms</h4>
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             {% if active_storm %}
                             <ul class="list-unstyled">
                                 {% for storm in active_storm %}
-                                <li><a href="/stormdata/{{ storm }}">{{ storm.get_current_name }}</a>
+                                <li><a href="/stormdata/{{ storm }}">{{ storm.peak_intensity }} {{ storm.get_current_name }}</a>
                                 </li>
                             {% endfor %}
                             </ul>
@@ -117,11 +117,11 @@
                 <div class="well">
                     <h4 style="text-align: center;">Inactive Storms</h4>
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             {% if active_storm %}
                             <ul class="list-unstyled">
                                 {% for storm in inactive_storms %}
-                                <li><a href="/stormdata/{{ storm }}">{{ storm.get_current_name }}</a>
+                                <li><a href="/stormdata/{{ storm }}">{{ storm.peak_intensity }} {{ storm.get_current_name }} - {{ storm.last_observed|date:"F, j" }}</a>
                                 </li>
                             {% endfor %}
                             </ul>

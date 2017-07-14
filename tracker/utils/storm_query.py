@@ -22,7 +22,7 @@ def find_active_advisory():
             event.active = False
             event.save()
 
-    return storm
+    return all_storms
 
 
 def basin_activity_stats():

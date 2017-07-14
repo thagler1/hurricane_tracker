@@ -1,5 +1,9 @@
 from django.db import models
 
+
+
+
+
 # Create your models here.
 class Storm(models.Model):
 
@@ -27,12 +31,22 @@ class Storm(models.Model):
         return self.stormid
 
     def get_current_name(self):
-        recent_adv = Advisory.objects.filter(stormid=self).order_by('-id')[0]
+        recent_adv = Advisory.objects.filter(stormid=self.id).order_by('-date')[0]
         return recent_adv.current_name
 
     def basin_name(self):
         b = [value for key, value in self.basins if key == self.region.upper()]
         return b[0]
+
+    def peak_intensity(self):
+        peak = Advisory.objects.filter(stormid=self.id).order_by('category')[0]
+        return peak.get_category_name()
+
+    def last_observed(self):
+        recent_adv = Advisory.objects.filter(stormid=self.id).order_by('-date')[0]
+        return recent_adv.date
+
+
 
 class Advisory(models.Model):
 
@@ -61,3 +75,6 @@ class Advisory(models.Model):
         region = cyclone_num[0].upper()
         return "%s%s"%(cyclone_num[2:4],region)
 
+    def get_category_name(self):
+        r = [value for key, value in self.category_choices if key == self.category ]
+        return r[0]
