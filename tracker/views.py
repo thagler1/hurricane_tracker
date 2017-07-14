@@ -10,7 +10,7 @@ from .models import Storm, Advisory, Posts
 
 
 def update(request):
-    #update_data()
+    update_data()
 
     active_storm = storm_query.find_active_advisory()
     inactive_storms = Storm.objects.filter(active=False)
@@ -27,7 +27,7 @@ def update(request):
 
 
 def stormdata(request, stormid):
-    update_data()
+
 
     storm = Storm.objects.get(stormid=stormid)
     advisories = Advisory.objects.filter(stormid=storm).order_by('-id')

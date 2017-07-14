@@ -82,7 +82,7 @@
                 <img class="img-responsive"  src="http://www.nhc.noaa.gov/xgtwo/two_atl_5d0.png" style="width:900px;height:500px;">
 
                 <hr>
-
+                {% lorem 100 %}
 
 
 
@@ -98,14 +98,24 @@
                     <h4 style="text-align: center;">Active Storms</h4>
                     <div class="row">
                         <div class="col-lg-12">
-                            {% if active_storm %}
-                            <ul class="list-unstyled">
-                                {% for storm in active_storm %}
-                                <li><a href="/stormdata/{{ storm }}">{{ storm.peak_intensity }} {{ storm.get_current_name }}- Winds: {{ storm.current_wind }}</a>
-                                </li>
-                            {% endfor %}
-                            </ul>
-                            {% endif %}
+                          {% if active_storm %}
+                                <table class="table">
+                                <thead><tr>
+                                    <th>Storm</th>
+                                    <th>Max Wind Spd</th>
+                                </tr>
+
+                                </thead>
+                                <tbody>
+                                    {% for storm in active_storm %}
+                                        <tr>
+                                            <td><a href="/stormdata/{{ storm }}">{{ storm.peak_intensity }} {{ storm.get_current_name }} </a></td>
+                                            <td><p>{{ storm.current_wind }}</p></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                </table>
+                        {% endif %}
                         </div>
 
                     </div>
@@ -117,14 +127,24 @@
                     <h4 style="text-align: center;">Inactive Storms</h4>
                     <div class="row">
                         <div class="col-lg-12">
-                            {% if active_storm %}
-                            <ul class="list-unstyled">
-                                {% for storm in inactive_storms %}
-                                <li><a href="/stormdata/{{ storm }}">{{ storm.peak_intensity }} {{ storm.get_current_name }} - {{ storm.last_observed|date:"F, j" }}</a>
-                                </li>
-                            {% endfor %}
-                            </ul>
-                            {% endif %}
+                          {% if inactive_storms %}
+                                <table class="table">
+                                <thead><tr>
+                                    <th>Storm</th>
+                                    <th>Last Observed</th>
+                                </tr>
+
+                                </thead>
+                                <tbody>
+                                    {% for storm in inactive_storms %}
+                                        <tr>
+                                            <td><a href="/stormdata/{{ storm }}">{{ storm.peak_intensity }} {{ storm.get_current_name }} </a></td>
+                                            <td><p>{{ storm.last_observed|date:"F, j" }}</p></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                </table>
+                        {% endif %}
                         </div>
 
                     <!-- /.row -->
@@ -145,12 +165,22 @@
                     <div class="row">
                         <div class="col-lg-12">
 
-                            <ul class="list-unstyled">
-                                {% for basin, count in basin_stats.items %}
-                                <li>{{ basin }}: {{ count }}
-                                </li>
-                            {% endfor %}
-                            </ul>
+                                <table class="table">
+                                <thead><tr>
+                                    <th>Basin</th>
+                                    <th>Storm Count</th>
+                                </tr>
+
+                                </thead>
+                                <tbody>
+                                    {% for basin, count in basin_stats.items %}
+                                        <tr>
+                                            <td><p>{{ basin }}</p></td>
+                                            <td><p>{{ count }}</p></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                </table>
 
                         </div>
 

@@ -83,6 +83,7 @@ class Storm(models.Model):
         url = [value for key, value in self.image_keys if key==prefix]
         print(url)
         return ("%s%s"%(url[0],cc))
+
     def max_wind_speed(self):
         adv = Advisory.objects.filter(stormid=self.id).order_by('-max_sus_wind')[0]
         return adv.max_sus_wind
@@ -101,7 +102,7 @@ class Advisory(models.Model):
     content = models.TextField()
     advisory_number = models.CharField(max_length=4)
     storm_location = models.CharField(max_length=10)
-    max_sus_wind = models.CharField(max_length=10)
+    max_sus_wind = models.IntegerField(default=None, null=True)
     category = models.IntegerField(choices=category_choices)
     current_name = models.CharField(default=None, null=True, max_length=40)
 

@@ -73,7 +73,8 @@ def format_location(row):
 
 def format_max_sustained_winds(row):
     trash, spd , km= row.split('...')
-    return spd
+
+    return int(spd.split()[0])
 
 
 
