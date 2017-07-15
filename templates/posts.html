@@ -56,7 +56,7 @@
                 <hr>
 
                 <!-- Date/Time -->
-                <p>As of {{ storm.last_observed|date:"F j, Y"}} at {{ most_recent.date|date:"P e" }}</p>
+                <p>As of {{ storm.latest_adv.date|date:"F j, Y"}} at {{ storm.latest_adv.date|date:"P e" }}</p>
 
                 <hr>
 
@@ -105,8 +105,8 @@
                     <h5 class="card-header">Statistics</h5>
                     <div class="card-block">
 
-                        <p>Current Location: {{ most_recent.storm_location }}</p>
-                        <p>Maximum Sustained Winds: {{ storm.current_wind}}</p>
+                        <p>Current Location: {{ storm.latest_adv.storm_location}}</p>
+                        <p>Maximum Sustained Winds: {{ storm.latest_adv.max_sus_wind}}</p>
                         <p>Highest winds observed: {{ storm.max_wind_speed }}</p>
                     </div>
                 </div>

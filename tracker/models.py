@@ -84,6 +84,12 @@ class Storm(models.Model):
         print(url)
         return ("%s%s"%(url[0],cc))
 
+    def latest_adv(self):
+        current = Advisory.objects.filter(stormid=self.id).order_by('-date')[0]
+        print(current)
+        return current
+
+
     def max_wind_speed(self):
         adv = Advisory.objects.filter(stormid=self.id).order_by('-max_sus_wind')[0]
         return adv.max_sus_wind
