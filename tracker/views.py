@@ -33,6 +33,7 @@ def stormdata(request, stormid):
     advisories = Advisory.objects.filter(stormid=storm).order_by('-id')
     most_recent = Advisory.objects.filter(stormid=storm).order_by('date')[0]
     storm_id_url = stormid[:4].upper()
+
     template = loader.get_template('posts.html')
 
     context ={
@@ -40,6 +41,7 @@ def stormdata(request, stormid):
         'advisories': advisories,
         'most_recent': most_recent,
         'storm_id_url': storm_id_url,
+
     }
 
 

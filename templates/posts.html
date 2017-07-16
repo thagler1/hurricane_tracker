@@ -48,7 +48,10 @@
 
                 <!-- Author -->
                 <p class="lead">
-                    Category:<a href="#">{{ storm.peak_intensity }}</a><br>
+                    Category:<a href="#">{%  if storm.latest_adv.saffir_scale > 0 and storm.active %}
+                    {{ storm.latest_adv.saffir_scale }}
+                    {% endif %}
+                    {{ storm.peak_intensity }}</a><br>
                     {{ storm.basin_name }}
 
                 </p>
@@ -107,7 +110,11 @@
 
                         <p>Current Location: {{ storm.latest_adv.storm_location}}</p>
                         <p>Maximum Sustained Winds: {{ storm.latest_adv.max_sus_wind}}</p>
-                        <p>Highest winds observed: {{ storm.max_wind_speed }}</p>
+                        <p>Highest winds observed: {{ storm.max_wind_speed.max_sus_wind }}</p>
+                        {% if storm.max_wind_speed.saffir_scale %}
+                            <p>Highest Saffir-Simpson Scale: {{ storm.max_wind_speed.saffir_scale }}</p>
+                        {% endif %}
+                        <p></p>
                     </div>
                 </div>
 

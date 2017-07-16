@@ -92,7 +92,8 @@ class Storm(models.Model):
 
     def max_wind_speed(self):
         adv = Advisory.objects.filter(stormid=self.id).order_by('-max_sus_wind')[0]
-        return adv.max_sus_wind
+        return adv
+
 class Advisory(models.Model):
 
     saffir_simpson = [
@@ -134,6 +135,18 @@ class Advisory(models.Model):
         r = [value for key, value in self.category_choices if key == self.category ]
         return r[0]
 
+    def saffir_scale(self):
+        scale = self.saffir_simpson
+        current_winds = self.max_sus_wind
+
+        for r, cat in scale:
+            low = r[0]
+            high = r[1]
+            if current_winds >= low and current_winds <= high:
+                return cat
+
+
+
 class Posts(models.Model):
     image = models.ImageField(upload_to=path_and_rename,
                                       blank=True,
@@ -141,6 +154,7 @@ class Posts(models.Model):
     title = models.CharField(max_length=150)
     content = models.TextField(blank=True, null=True)
     author = models.CharField(max_length=75)
+
 
     def __str__(self):
         return self.title
