@@ -44,6 +44,8 @@ class Storm(models.Model):
     ]
 
 
+
+
     stormid = models.CharField(max_length=10)
     active = models.BooleanField(default=True)
     region = models.CharField(max_length=2)
@@ -81,12 +83,10 @@ class Storm(models.Model):
         prefix = self.stormid[:2]
         cc = self.stormid[2:4]
         url = [value for key, value in self.image_keys if key==prefix]
-        print(url)
         return ("%s%s"%(url[0],cc))
 
     def latest_adv(self):
         current = Advisory.objects.filter(stormid=self.id).order_by('-date')[0]
-        print(current)
         return current
 
 
@@ -94,6 +94,15 @@ class Storm(models.Model):
         adv = Advisory.objects.filter(stormid=self.id).order_by('-max_sus_wind')[0]
         return adv.max_sus_wind
 class Advisory(models.Model):
+
+    saffir_simpson = [
+        ((0,73),0),
+        ((74,95),1),
+        ((96,110),2),
+        ((111,129),3),
+        ((130,156),4),
+        ((157,1000),5)
+    ]
 
     category_choices =[(1,'Subtropical Depression'),
                        (2,'Tropical Depression'),
@@ -111,6 +120,7 @@ class Advisory(models.Model):
     max_sus_wind = models.IntegerField(default=None, null=True)
     category = models.IntegerField(choices=category_choices)
     current_name = models.CharField(default=None, null=True, max_length=40)
+
 
     def __str__(self):
         return "%s %s"%(self.current_name, self.advisory_id)
