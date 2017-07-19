@@ -4,6 +4,7 @@ import os
 
 def noaa_ftp():
     update_data()
+    print("complete")
     return True
 
 
