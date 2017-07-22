@@ -59,7 +59,7 @@ def advisory(request, advisory_id):
     return HttpResponse(template.render(context, request))
 
 def about(request):
-    p = Posts.objects.get(title='About Tropical Strom Tracker')
+    p = Posts.objects.get(title='About Tropical Storm Tracker')
     context ={
         'post':p
     }
