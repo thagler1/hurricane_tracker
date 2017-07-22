@@ -16,23 +16,24 @@ def classify_storm(row):
 
 
 
+
 def normalize_time(timezone, datetime_obj):
     timezones = {
-        'AST': -4,
-        'EST': -5,
-        'EDT': -4,
-        'CST': -6,
-        'CDT': -5,
-        'MST': -7,
-        'MDT': -6,
-        'PST': -8,
-        'PDT': -7,
-        'AKST': -9,
-        'AKDT': -8,
-        'HAST': -10,
-        'HADT': -9,
+        'AST': -1,
+        'EST': 0,
+        'EDT': -1,
+        'CST': 1,
+        'CDT': 0,
+        'MST': 2,
+        'MDT': 1,
+        'PST': 3,
+        'PDT': 2,
+        'AKST': 4,
+        'AKDT': 3,
+        'HAST': 5,
+        'HADT': 4,
     }
-    return datetime_obj +datetime.timedelta(hours =timezones[timezone]*-1 )
+    return datetime_obj +datetime.timedelta(hours =timezones[timezone] )
 
 
 def connect():
