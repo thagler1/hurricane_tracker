@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from .utils.ftpscrape import update_data
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
@@ -6,6 +6,8 @@ from django.template import loader
 from .utils import storm_query
 import datetime
 from .models import Storm, Advisory, Posts
+from bokeh.plotting import figure, output_file, show
+from bokeh.embed import components
 # Create your views here.
 
 
@@ -35,6 +37,7 @@ def stormdata(request, stormid):
     storm_id_url = stormid[:4].upper()
 
     template = loader.get_template('posts.html')
+
 
     context ={
         'storm': storm,
@@ -66,3 +69,27 @@ def about(request):
     template = loader.get_template('about.html')
 
     return HttpResponse(template.render(context, request))
+
+def data_viz(request, stormid):
+
+    storm = Storm.objects.get(stormid=stormid)
+    advisories = Advisory.objects.filter(stormid=storm).order_by('-id')
+
+    #Plot intensity
+    x = [i for i, x in enumerate(advisories)]
+    y = [adv.max_sus_wind for adv in advisories]
+    print(y)
+    title = 'y = f(x)'
+
+    plot = figure(title=title,
+                  x_axis_label='X-Axis',
+                  y_axis_label='Y-Axis',
+                  plot_width=400,
+                  plot_height=400)
+    plot.line(x, y, legend='f(x)', line_width=2)
+    # Store components
+    script, div = components(plot)
+
+    # Feed them to the Django template.
+    return render_to_response('data_viz.html',
+                              {'script': script, 'div': div})

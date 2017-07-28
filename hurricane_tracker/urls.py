@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^stormdata/advisory/(?P<advisory_id>.+)', views.advisory),
     url(r'^About/', views.about),
     url(r'^admin/', admin.site.urls),
+    url(r'^stormvix/(?P<stormid>[a-z]{2}[0-9]{6})', views.data_viz),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
