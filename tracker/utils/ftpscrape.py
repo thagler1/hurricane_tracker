@@ -30,10 +30,15 @@ def normalize_time(timezone, datetime_obj):
         'PDT': 2,
         'AKST': 4,
         'AKDT': 3,
+<<<<<<< HEAD
         'HAST': 5,
         'HADT': 4,
 	'HST':5,
 	'HDT':4,
+=======
+        'HST': 5,
+        'HDT': 4,
+>>>>>>> 059286108381ecee879e38614fffb5df1c3e112c
     }
     return datetime_obj +datetime.timedelta(hours =timezones[timezone] )
 
@@ -41,8 +46,12 @@ def normalize_time(timezone, datetime_obj):
 def connect():
     print("attempting to connect..")
     base_url = 'ftp.nhc.noaa.gov'
-    ftp = ftplib.FTP(base_url)
-    ftp.login()
+    try:
+        ftp = ftplib.FTP(base_url)
+        print("connected to %s at %s, attempting to log in"%(base_url, datetime.datetime.now()))
+        ftp.login()
+    except:
+        print("failed to connect to %s"%(base_url))
     print("logged in..")
     ftp.cwd('atcf/pub/')
     print("switching directories")
