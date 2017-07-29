@@ -115,6 +115,9 @@
                             <p>Highest Saffir-Simpson Scale: {{ storm.max_wind_speed.saffir_scale }}</p>
                         {% endif %}
                         <p></p>
+                        <div style="max-width: 300px; max-height: 300px">
+                            {% include 'data_viz.html' %}
+                        </div>
                     </div>
                 </div>
 

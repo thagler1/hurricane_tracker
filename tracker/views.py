@@ -6,8 +6,11 @@ from django.template import loader
 from .utils import storm_query
 import datetime
 from .models import Storm, Advisory, Posts
-from bokeh.plotting import figure, output_file, show
-from bokeh.embed import components
+import json
+
+from random import randint
+from django.views.generic import TemplateView
+from chartjs.views.lines import BaseLineChartView
 # Create your views here.
 
 
@@ -36,6 +39,15 @@ def stormdata(request, stormid):
     most_recent = Advisory.objects.filter(stormid=storm).order_by('date')[0]
     storm_id_url = stormid[:4].upper()
 
+    def date_handler(obj):
+        return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+
+    adv = Storm.objects.get(stormid=stormid).all_advisories()
+
+    x = [a.date for a in adv]
+    y = [a.max_sus_wind for a in adv]
+
+
     template = loader.get_template('posts.html')
 
 
@@ -44,6 +56,8 @@ def stormdata(request, stormid):
         'advisories': advisories,
         'most_recent': most_recent,
         'storm_id_url': storm_id_url,
+        'x': json.dumps(x, default=date_handler),
+        'y': json.dumps(y)
 
     }
 
@@ -70,26 +84,18 @@ def about(request):
 
     return HttpResponse(template.render(context, request))
 
-def data_viz(request, stormid):
 
-    storm = Storm.objects.get(stormid=stormid)
-    advisories = Advisory.objects.filter(stormid=storm).order_by('-id')
+def stormviz(request, stormid):
+    def date_handler(obj):
+        return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
-    #Plot intensity
-    x = [i for i, x in enumerate(advisories)]
-    y = [adv.max_sus_wind for adv in advisories]
-    print(y)
-    title = 'y = f(x)'
+    adv = Storm.objects.get(stormid=stormid).all_advisories()
 
-    plot = figure(title=title,
-                  x_axis_label='X-Axis',
-                  y_axis_label='Y-Axis',
-                  plot_width=400,
-                  plot_height=400)
-    plot.line(x, y, legend='f(x)', line_width=2)
-    # Store components
-    script, div = components(plot)
-
-    # Feed them to the Django template.
-    return render_to_response('data_viz.html',
-                              {'script': script, 'div': div})
+    x = [a.date for a in adv]
+    y = [a.max_sus_wind for a in adv]
+    template = loader.get_template('data_viz.html')
+    context ={
+        'x':json.dumps(x, default=date_handler),
+        'y': json.dumps(y)
+    }
+    return HttpResponse(template.render(context, request))

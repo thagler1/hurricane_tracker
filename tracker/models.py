@@ -93,6 +93,8 @@ class Storm(models.Model):
     def max_wind_speed(self):
         adv = Advisory.objects.filter(stormid=self.id).order_by('-max_sus_wind')[0]
         return adv
+    def all_advisories(self):
+        return Advisory.objects.filter(stormid=self.id).order_by('date')
 
 class Advisory(models.Model):
 
