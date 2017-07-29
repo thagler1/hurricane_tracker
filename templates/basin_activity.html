@@ -17,16 +17,40 @@
     var ctx = document.getElementById('myChart');
     var dates = JSON.parse('{{ x|safe }}');
     var counts = JSON.parse('{{ y|safe }}');
+    var color = Chart.helpers.color;
+
     var myChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: dates,
             datasets: [
-                {
-                    data: counts,
-                    label: 'Storm Count',
 
-                }
+                {
+                    data: counts[0],
+                    label: '2015',
+                    borderColor:
+                'rgba(255, 99, 132, 0.2)',
+                    fill: false
+
+
+                },
+                {
+                    data:counts[1],
+                    label:'2016',
+                    borderColor:
+                    'rgba(54, 162, 235, 0.2)',
+                    fill: false
+
+
+                },
+                {
+                    data:counts[2],
+                    label:'2017',
+                    borderColor:
+            'rgba(255, 206, 86, 0.2)',
+                    fill: false
+                },
+
             ]
         },
 

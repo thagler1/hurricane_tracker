@@ -1,5 +1,6 @@
 from django.shortcuts import render, render_to_response
 from .utils.ftpscrape import update_data
+from .utils import archive_scrape
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
@@ -16,9 +17,11 @@ from chartjs.views.lines import BaseLineChartView
 
 def update(request):
     #update_data()
+    #archive_scrape.update_data()
 
     active_storm = storm_query.find_active_advisory()
-    inactive_storms = Storm.objects.filter(active=False)
+
+    inactive_storms = Storm.objects.filter(active=False, year=datetime.date.today().year)
     template = loader.get_template('index.html')
     basin_stats = storm_query.basin_activity_stats()
     context ={
@@ -105,19 +108,23 @@ def data_viz(request):
         return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
     months = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
+    years = ['2015','2016', '2017']
     count = []
     stormset = []
-    for i, month in enumerate(months):
-        monthset = set()
-        stormcount = Advisory.objects.filter(date__month=i+1)
+    for year in years:
+        year_count = []
+        for i, month in enumerate(months):
+            monthset = set()
+            stormcount = Advisory.objects.filter(date__month=i+1, date__year=int(year))
 
-        for storm in stormcount:
-            if storm not in stormset:
-                stormset.append(stormset)
-                monthset.add(storm.stormid)
+            for storm in stormcount:
+                if storm.stormid not in stormset:
+                    stormset.append(storm.stormid)
+                    monthset.add(storm.stormid)
 
-        count.append(len(monthset))
-
+            year_count.append(len(monthset))
+        count.append(year_count)
+    print(len(count))
     template = loader.get_template('data.html')
     context = {
         'x': json.dumps(months),

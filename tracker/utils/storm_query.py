@@ -44,7 +44,7 @@ def basin_activity_stats():
 
     r = {}
     for basin in all_basins:
-        count = Storm.objects.filter(region=basin['region']).count()
+        count = Storm.objects.filter(region=basin['region'], year=datetime.date.today().year).count()
         name = get_basin_name(basin['region'])
         r.setdefault(name,count)
 
