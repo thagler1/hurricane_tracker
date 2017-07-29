@@ -32,6 +32,8 @@ def normalize_time(timezone, datetime_obj):
         'AKDT': 3,
         'HAST': 5,
         'HADT': 4,
+	'HST':5,
+	'HDT':4,
     }
     return datetime_obj +datetime.timedelta(hours =timezones[timezone] )
 
