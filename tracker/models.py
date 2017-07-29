@@ -96,6 +96,9 @@ class Storm(models.Model):
     def all_advisories(self):
         return Advisory.objects.filter(stormid=self.id).order_by('date')
 
+    def first_seen(self):
+        return Advisory.objects.filter(stormid=self.id).order_by('date')[0]
+
 class Advisory(models.Model):
 
     saffir_simpson = [

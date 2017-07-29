@@ -99,3 +99,30 @@ def stormviz(request, stormid):
         'y': json.dumps(y)
     }
     return HttpResponse(template.render(context, request))
+
+def data_viz(request):
+    def date_handler(obj):
+        return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+
+    months = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
+    count = []
+    stormset = []
+    for i, month in enumerate(months):
+        monthset = set()
+        stormcount = Advisory.objects.filter(date__month=i+1)
+
+        for storm in stormcount:
+            if storm not in stormset:
+                stormset.append(stormset)
+                monthset.add(storm.stormid)
+
+        count.append(len(monthset))
+
+    template = loader.get_template('data.html')
+    context = {
+        'x': json.dumps(months),
+        'y':json.dumps(count)
+    }
+
+    return HttpResponse(template.render(context,request))
+

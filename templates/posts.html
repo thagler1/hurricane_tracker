@@ -85,24 +85,6 @@
 
             <!-- Sidebar Widgets Column -->
             <div class="col-md-4">
-
-                <!-- Categories Widget -->
-                <div class="card my-4">
-                    <h5 class="card-header">Advisories {% if storm.active %}ACTIVE STORM{% endif %}</h5>
-                    <div class="card-block">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <ul class="list-unstyled mb-0">
-                                    {% for adv in advisories %}
-                                    <li><a href="advisory/{{ adv.advisory_id }}">{{ adv }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Side Widget -->
                 <div class="card my-4">
                     <h5 class="card-header">Statistics</h5>
@@ -120,6 +102,24 @@
                         </div>
                     </div>
                 </div>
+                <!-- Categories Widget -->
+                <div class="card my-4">
+                    <h5 class="card-header">Advisories {% if storm.active %}ACTIVE STORM{% endif %}</h5>
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <ul class="list-unstyled mb-0">
+                                    {% for adv in advisories %}
+                                    <li><a href="advisory/{{ adv.advisory_id }}">{{ adv }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
 
             </div>
 

@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^About/', views.about),
     url(r'^admin/', admin.site.urls),
     url(r'^stormviz/(?P<stormid>[a-z]{2}[0-9]{6})', views.stormviz),
+    url(r'^data/', views.data_viz)
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
