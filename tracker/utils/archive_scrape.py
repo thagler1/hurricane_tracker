@@ -127,7 +127,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
                     speed = format_speed(row)
                 except:
                     speed = 0
-            elif 'MINIMUM CENTRAL PRESSURE' in row:
+            elif 'MINIMUM CENTRAL PRESSURE...' in row:
                 pressure = format_pressure(row)
 
 
