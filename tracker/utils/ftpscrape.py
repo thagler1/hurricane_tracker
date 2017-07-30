@@ -113,8 +113,11 @@ def check_advisory(advisory_num, advisory_id, storm,):
                 date_dict = format_date(row)
             elif 'Advisory Number' in row:
                 category, name = classify_storm(row)
-            elif 'PRESENT MOVEMENT' in row:
-                speed = format_speed(row)
+            elif 'PRESENT MOVEMENT...' in row:
+                try:
+                    speed = format_speed(row)
+                except:
+                    speed = 0
             elif 'MINIMUM CENTRAL PRESSURE' in row:
                 pressure = format_pressure(row)
 
