@@ -76,7 +76,10 @@ def format_date(row):
 
 def format_location(row):
     coords = row.split('...')
-    return coords[1]
+    xy = coords[1]
+    x = xy.split()[0][:-1]
+    y = xy.split()[1][:-1]
+    return xy, float(x[:-1]), float(y[:-1])*-1
 
 def format_max_sustained_winds(row):
     trash, spd , km= row.split('...')
@@ -106,7 +109,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
 
             content = "\n".join([content, row])
             if "LOCATION..." in row:
-                location = format_location(row)
+                location, lat, long = format_location(row)
             elif "MAXIMUM SUSTAINED WINDS..." in row:
                 max_s_winds = format_max_sustained_winds(row)
             elif " 2017" in row and len(row.split()) == 7:
@@ -138,6 +141,8 @@ def check_advisory(advisory_num, advisory_id, storm,):
                                 min_cent_pressure= pressure,
                                 category=category,
                                 current_name = name,
+                                lat= lat,
+                                long= long,
                                 content=content)
 
         new_advisory.save()
