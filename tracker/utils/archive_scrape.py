@@ -90,6 +90,14 @@ def format_max_sustained_winds(row):
 
     return int(spd.split()[0])
 
+def format_speed(row):
+    first = row.split(' AT ')[1]
+    second = first.split('MPH')[0]
+    return int(second.strip())
+
+def format_pressure(row):
+    first = row.split('...')[1]
+    return float(first.split()[0])
 
 
 
@@ -114,6 +122,13 @@ def check_advisory(advisory_num, advisory_id, storm,):
                 date_dict = format_date(row)
             elif 'ADVISORY NUMBER' in row:
                 category, name = classify_storm(row)
+            elif 'PRESENT MOVEMENT...' in row:
+                try:
+                    speed = format_speed(row)
+                except:
+                    speed = 0
+            elif 'MINIMUM CENTRAL PRESSURE' in row:
+                pressure = format_pressure(row)
 
 
 
