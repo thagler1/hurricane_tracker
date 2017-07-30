@@ -53,7 +53,7 @@ def connect():
     except:
         print("failed to connect to %s"%(base_url))
     print("logged in..")
-    ftp.cwd('atcf/archive/2016/messages/')
+    ftp.cwd('atcf/archive/2015/messages/')
     print("switching directories")
 
     return ftp
@@ -118,7 +118,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
                 location = format_location(row)
             elif "MAXIMUM SUSTAINED WINDS..." in row:
                 max_s_winds = format_max_sustained_winds(row)
-            elif " 2016" in row and len(row.split()) == 7:
+            elif " 2015" in row and len(row.split()) == 7:
                 date_dict = format_date(row)
             elif 'ADVISORY NUMBER' in row:
                 category, name = classify_storm(row)
@@ -157,7 +157,7 @@ def check_storm(stormid):
         newstorm = Storm(stormid=stormid,
                          region=stormid[:2],
                          annual_cyclone_number=1,
-                         year = 2016
+                         year = 2015
                          )
 
         newstorm.save()
