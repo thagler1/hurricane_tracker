@@ -63,7 +63,8 @@ def stormdata(request, stormid):
         'storm_id_url': storm_id_url,
         'x': json.dumps(x, default=date_handler),
         'y': json.dumps(y),
-        'speed_y': json.dumps(speed_y)
+        'speed_y': json.dumps(speed_y),
+        'advisory':adv
 
     }
 
