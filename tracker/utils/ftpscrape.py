@@ -77,8 +77,8 @@ def format_date(row):
 def format_location(row):
     coords = row.split('...')
     xy = coords[1]
-    x = xy.split()[0][:-1]
-    y = xy.split()[1][:-1]
+    x = xy.split()[0]
+    y = xy.split()[1]
     return xy, float(x[:-1]), float(y[:-1])*-1
 
 def format_max_sustained_winds(row):
