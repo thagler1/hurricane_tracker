@@ -76,6 +76,35 @@
                 <hr>
                 <img class="img-fluid rounded" src="http://www.ssd.noaa.gov/PS/TROP/floaters/{{ most_recent.image_link }}/imagery/vis0-lalo.gif" alt="">
 
+                <hr>
+                <table class="table">
+                    <thead>
+
+                    <tr>
+                        <th>Date</th>
+                        <th>time</th>
+                        <th>Lat</th>
+                        <th>lon</th>
+                        <th>Wind Speed<br> (MPH)</th>
+                        <th>Pressure (mb)</th>
+                        <th>Storm Type</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for adv in advisory %}
+                        <tr>
+                        <td>{{ adv.date|date:"F j, Y" }}</td>
+                        <td>{{ adv.date|date:"P e" }}</td>
+                        <td>{{ adv.lat }}</td>
+                        <td>{{ adv.long }}</td>
+                        <td>{{ adv.max_sus_wind }}</td>
+                        <td>{{ adv.min_cent_pressure }}</td>
+                        <td>{{ adv.get_category_display }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
 
 
 
