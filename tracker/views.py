@@ -17,7 +17,7 @@ from chartjs.views.lines import BaseLineChartView
 
 def update(request):
     #update_data()
-    archive_scrape.update_data()
+    #archive_scrape.update_data()
 
     active_storm = storm_query.find_active_advisory()
 
@@ -49,6 +49,8 @@ def stormdata(request, stormid):
 
     x = [a.date for a in adv]
     y = [a.max_sus_wind for a in adv]
+    speed_y = [a.speed for a in adv]
+    print(speed_y)
 
 
     template = loader.get_template('posts.html')
@@ -60,7 +62,8 @@ def stormdata(request, stormid):
         'most_recent': most_recent,
         'storm_id_url': storm_id_url,
         'x': json.dumps(x, default=date_handler),
-        'y': json.dumps(y)
+        'y': json.dumps(y),
+        'speed_y': json.dumps(speed_y)
 
     }
 
