@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^$', views.update),
     url(r'^stormdata/(?P<stormid>[a-z]{2}[0-9]{6})', views.stormdata),
     url(r'^stormdata/advisory/(?P<advisory_id>.+)', views.advisory),
-    url(r'^About/', views.about),
+    url(r'^about/', views.about),
     url(r'^admin/', admin.site.urls),
     url(r'^stormviz/(?P<stormid>[a-z]{2}[0-9]{6})', views.stormviz),
     url(r'^data/', views.data_viz)

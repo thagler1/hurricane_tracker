@@ -159,7 +159,7 @@ class Posts(models.Model):
     title = models.CharField(max_length=150)
     content = models.TextField(blank=True, null=True)
     author = models.CharField(max_length=75)
-
+    target = models.CharField(max_length=50)
 
     def __str__(self):
         return self.title
