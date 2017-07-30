@@ -120,7 +120,7 @@ class Advisory(models.Model):
     advisory_id = models.CharField(max_length=75)
     stormid = models.ForeignKey(Storm)
     date = models.DateTimeField()
-    content = models.TextArea()
+    content = models.TextField()
     advisory_number = models.CharField(max_length=4, default=None, null=True)
     storm_location = models.CharField(max_length=40)
     max_sus_wind = models.IntegerField(default=None, null=True)
