@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.deconstruct import deconstructible
-#from django.contrib.gis.db import models
+from django.contrib.gis.db import models
 import base64
 import os
 import PIL
@@ -127,7 +127,7 @@ class Advisory(models.Model):
     max_sus_wind = models.IntegerField(default=None, null=True)
     speed = models.IntegerField(default=None, null=True)
     min_cent_pressure = models.FloatField(default=None,null=True)
-    #coordinates = models.PointField(default=None, null=True)
+    coordinates = models.PointField(default=None, null=True)
     category = models.IntegerField(choices=category_choices)
     current_name = models.CharField(default=None, null=True, max_length=40)
     lat = models.FloatField(default=None, null=True)
