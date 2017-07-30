@@ -130,6 +130,8 @@ class Advisory(models.Model):
     #coordinates = models.PointField(default=None, null=True)
     category = models.IntegerField(choices=category_choices)
     current_name = models.CharField(default=None, null=True, max_length=40)
+    lat = models.FloatField(default=None, null=True)
+    long = models.FloatField(default=None, null=True)
 
 
     def __str__(self):
