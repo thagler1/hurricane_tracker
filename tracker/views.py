@@ -110,19 +110,14 @@ def data_viz(request):
     months = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
     years = ['2015','2016', '2017']
     count = []
-    stormset = []
     for year in years:
         year_count = []
         for i, month in enumerate(months):
-            monthset = set()
-            stormcount = Advisory.objects.filter(date__month=i+1, date__year=int(year))
 
-            for storm in stormcount:
-                if storm.stormid not in stormset:
-                    stormset.append(storm.stormid)
-                    monthset.add(storm.stormid)
+            stormcount = Advisory.objects.filter(date__month=i+1, date__year=int(year)).distinct('stormid').count()
 
-            year_count.append(len(monthset))
+
+            year_count.append(stormcount)
         count.append(year_count)
     print(len(count))
     template = loader.get_template('data.html')
