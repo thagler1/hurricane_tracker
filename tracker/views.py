@@ -17,7 +17,7 @@ from chartjs.views.lines import BaseLineChartView
 
 def update(request):
     #update_data()
-    archive_scrape.update_data()
+    #archive_scrape.update_data()
 
     active_storm = storm_query.find_active_advisory()
 
