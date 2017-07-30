@@ -182,8 +182,14 @@ def update_data():
         check_advisory(advisory_num, ftpfile, storm)
 
 
-
-
+def correct_long():
+    "one time fix to correct longitude"
+    adv = Advisory.objects.filter(long__gt=0)
+    for a in adv:
+        long = a.long*-1
+        a.long = long
+        a.save()
+        print(long)
 
 
 
