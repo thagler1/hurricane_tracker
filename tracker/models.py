@@ -52,6 +52,7 @@ class Storm(models.Model):
     region = models.CharField(max_length=2)
     annual_cyclone_number=models.IntegerField(default=0)
     year = models.IntegerField(default=2017)
+    path = models.LineStringField(default=None, null=True)
 
 
     def __str__(self):
