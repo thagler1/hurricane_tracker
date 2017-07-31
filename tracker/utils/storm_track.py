@@ -1,4 +1,5 @@
 from ..models import Storm, Advisory
+from django.contrib.gis.geos import LineString
 
 def add_track_init():
     storms = Storm.objects.filter(path=None)
