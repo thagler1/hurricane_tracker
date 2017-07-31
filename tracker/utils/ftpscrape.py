@@ -191,5 +191,15 @@ def correct_long():
         a.save()
         print(long)
 
+def add_missing_coord():
+    adv = Advisory.objects.filter(long=None)
+    for a in adv:
+        xy = a.storm_location
+        x = xy.split()[0]
+        y = xy.split()[1]
+        a.lat = float(x[:-1])
+        a.long = float(y[:-1]) * -1
+        a.save()
+        print(a.long)
 
 
