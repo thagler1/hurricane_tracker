@@ -6,10 +6,11 @@ def add_track_init():
     for storm in storms:
         advs = Advisory.objects.filter(stormid=storm).order_by('date')
         for a in advs:
-            if storm.path:
-                storm.path.append((a.lat,a.long))
-            else:
-                storm.path =LineString([a.lat,a.long])
+            if a.lat and a.long:
+                if storm.path:
+                    storm.path.append((a.lat,a.long))
+                else:
+                    storm.path =LineString([a.lat,a.long])
 
         print(storm.path)
         storm.save()
