@@ -202,4 +202,19 @@ def add_missing_coord():
         a.save()
         print(a.long)
 
+def missing_cet_press():
+    adv = Advisory.objects.filter(min_cent_pressure=None)
+
+    def format_pressure(row):
+        first = row.split('...')[1]
+        return float(first.split()[0])
+
+    for a in adv:
+        for l in a.content.split('\n'):
+            if 'MINIMUM CENTRAL PRESSURE...' in l:
+                pressure = format_pressure(l)
+                a.min_cent_pressure = pressure
+                a.save
+                print(pressure)
+
 
