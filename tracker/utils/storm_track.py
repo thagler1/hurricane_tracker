@@ -6,4 +6,5 @@ def add_track_init():
         advs = Advisory.objects.filter(stormid=storm.stormid).order_by('date')
         path = [(a.lat, a.long) for a in advs]
         storm.path = path
+        print(path)
         storm.save()
