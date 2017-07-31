@@ -9,7 +9,7 @@ def add_track_init():
             if storm.path:
                 storm.path.append((a.lat,a.long))
             else:
-                storm.path =LineString((a.lat,a.long))
+                storm.path =LineString((a.lat,a.long), srid=4326)
 
         print(storm.path)
         storm.save()
