@@ -214,7 +214,7 @@ def missing_cet_press():
             if 'MINIMUM CENTRAL PRESSURE...' in l:
                 pressure = format_pressure(l)
                 a.min_cent_pressure = pressure
-                a.save
+                a.save()
                 print(pressure)
 
 
