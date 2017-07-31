@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.deconstruct import deconstructible
-#from django.contrib.gis.db import models
+from django.contrib.gis.db import models
 import base64
 import os
 import PIL
