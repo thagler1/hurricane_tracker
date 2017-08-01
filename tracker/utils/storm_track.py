@@ -2,7 +2,7 @@ from ..models import Storm, Advisory
 from django.contrib.gis.geos import LineString, GEOSGeometry
 
 def add_track_init():
-    storms = Storm.objects.all()
+    storms = Storm.objects.filter(path = None)
 
     for storm in storms:
         try:

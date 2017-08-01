@@ -1,6 +1,7 @@
 import ftplib
 from ..models import Storm, Advisory
 import datetime
+from django.contrib.gis.geos import LineString, GEOSGeometry
 
 
 
@@ -143,6 +144,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
                                 current_name = name,
                                 lat= lat,
                                 long= long,
+                                coordinates=GEOSGeometry('POINT(%s %s)'%(long, lat), srid=4326),
                                 content=content)
 
         new_advisory.save()
@@ -158,11 +160,19 @@ def check_storm(stormid):
                          annual_cyclone_number=1,
                          year = 2017
                          )
+        a = newstorm.all_advisories()
+        coords = LineString((a.long, a.lat),(a.long, a.lat))
+        newstorm.path = coords
 
         newstorm.save()
         return newstorm
     else:
-        return Storm.objects.get(stormid=stormid)
+        storm = Storm.objects.get(stormid=stormid)
+        advs = storm.all_advisories()
+        coords = LineString([(a.long, a.lat) for a in advs])
+        storm.path = coords
+        storm.save()
+        return storm
 
 
 
