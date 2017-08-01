@@ -44,7 +44,7 @@ def stormdata(request, stormid):
     geojson = serialize('geojson', stormgeo,
               geometry_field='path',
               fields=('stormid',))
-    print(geojson)
+
     adv = Storm.objects.get(stormid=stormid).all_advisories()
 
     x = [a.date for a in adv]
@@ -109,6 +109,9 @@ def stormviz(request, stormid):
     return HttpResponse(template.render(context, request))
 
 def data_viz(request):
+    geojson = serialize('geojson', Storm.objects.all(),
+              geometry_field='path',
+              fields=('stormid',))
     def date_handler(obj):
         return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
@@ -128,7 +131,8 @@ def data_viz(request):
     template = loader.get_template('data.html')
     context = {
         'x': json.dumps(months),
-        'y':json.dumps(count)
+        'y':json.dumps(count),
+        'geojson':geojson
     }
 
     return HttpResponse(template.render(context,request))
