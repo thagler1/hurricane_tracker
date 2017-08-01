@@ -21,7 +21,7 @@ def update(request):
     basin_stats = storm_query.basin_activity_stats()
     geojson = serialize('geojson', active_storm,
               geometry_field='path',
-              fields=('stormid',))
+              fields=('stormid','year'))
     context ={
         'active_storm': active_storm,
         'inactive_storms': inactive_storms,
@@ -47,7 +47,7 @@ def stormdata(request, stormid):
 
     geojson = serialize('geojson', stormgeo,
               geometry_field='path',
-              fields=('stormid',))
+              fields=('stormid','year'))
 
     adv = Storm.objects.get(stormid=stormid).all_advisories()
 
@@ -115,7 +115,7 @@ def stormviz(request, stormid):
 def data_viz(request):
     geojson = serialize('geojson', Storm.objects.all(),
               geometry_field='path',
-              fields=('stormid',))
+              fields=('stormid','year'))
     def date_handler(obj):
         return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 

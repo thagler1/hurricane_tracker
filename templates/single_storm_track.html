@@ -8,6 +8,10 @@
 <div id="mapid" style="width: 100%; height: 500px"></div>
                 <script>
 
+
+
+
+
                 var mymap = L.map('mapid').setView([29, -97], 3);
 
 
@@ -17,10 +21,31 @@
                                 id: 'mapbox.satellite'
                 }).addTo(mymap);
 
-                L.geoJSON({{ geojson|safe }}).addTo(mymap);
+                L.geoJSON({{ geojson|safe }},
+                    {
+                         style: function (feature) {
+                             return {
+                            "color": getColor(feature.properties.year),
+
+        }}
+                    }
+                ).addTo(mymap);
 
 
 
+
+function getColor(x) {
+    if (x==2017){
+        return '#bd0026'
+    }
+    else if (x==2016){
+        return '#0bbd06'
+    }
+    else {
+        return '#071ebd'
+    }
+
+};
 
 
 
