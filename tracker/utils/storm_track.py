@@ -1,5 +1,5 @@
 from ..models import Storm, Advisory
-from django.contrib.gis.geos import LineString
+from django.contrib.gis.geos import LineString, GEOSGeometry
 
 def add_track_init():
     storms = Storm.objects.all()
@@ -16,6 +16,7 @@ def add_track_init():
 def define_coords():
     advs = Advisory.objects.all()
     for a in advs:
-        a.coordinates = (a.long, a.lat)
+
+        a.coordinates = GEOSGeometry('POINT(%s %s)' % (a.long, a.lat), srid=4326)
         a.save()
 
