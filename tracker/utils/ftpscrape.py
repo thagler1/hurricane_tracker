@@ -191,8 +191,6 @@ def update_data():
             advs = storm.all_advisories()
             if advs.count()>1:
                 coord = LineString([(a.long, a.lat) for a in advs])
-                storm.path.append(coords)
-
 
         else:
             coord = LineString([coords, coords])
