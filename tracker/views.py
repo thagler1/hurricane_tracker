@@ -44,7 +44,7 @@ def stormdata(request, stormid):
     geojson = serialize('geojson', stormgeo,
               geometry_field='path',
               fields=('stormid',))
-
+    print(geojson)
     adv = Storm.objects.get(stormid=stormid).all_advisories()
 
     x = [a.date for a in adv]
