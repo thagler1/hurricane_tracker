@@ -33,6 +33,7 @@ def stormdata(request, stormid):
 
 
     storm = Storm.objects.get(stormid=stormid)
+    stormgeo = Storm.objects.filter(stormid=stormid)
     advisories = Advisory.objects.filter(stormid=storm).order_by('-id')
     most_recent = Advisory.objects.filter(stormid=storm).order_by('date')[0]
     storm_id_url = stormid[:4].upper()
@@ -40,7 +41,7 @@ def stormdata(request, stormid):
     def date_handler(obj):
         return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
-    geojson = serialize('geojson', storm,
+    geojson = serialize('geojson', stormgeo,
               geometry_field='path',
               fields=('stormid',))
 
