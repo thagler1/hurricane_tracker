@@ -2,15 +2,14 @@ from ..models import Storm, Advisory
 from django.contrib.gis.geos import LineString
 
 def add_track_init():
-    storms = Storm.objects.filter(path=None)
-    for storm in storms:
-        advs = Advisory.objects.filter(stormid=storm).order_by('date')
-        for a in advs:
-            if a.lat and a.long:
-                if storm.path:
-                    storm.path.append((a.lat,a.long))
-                else:
-                    storm.path =[a.lat,a.long]
+    storms = Storm.objects.all()
 
-        print(storm.path)
-        storm.save()
+    for storm in storms:
+        try:
+            advs = storm.get_advisories()
+            coords = LineString([(a.long, a.lat) for a in advs])
+            storm.path = coords
+            storm.save()
+        except:
+            print(storm.stormid)
+
