@@ -129,12 +129,12 @@ class Advisory(models.Model):
     max_sus_wind = models.IntegerField(default=None, null=True)
     speed = models.IntegerField(default=None, null=True)
     min_cent_pressure = models.FloatField(default=None,null=True)
-    #coordinates = models.PointField(default=None, null=True)
+    coordinates = models.PointField(default=None, null=True)
     category = models.IntegerField(choices=category_choices)
     current_name = models.CharField(default=None, null=True, max_length=40)
     lat = models.FloatField(default=None, null=True)
     long = models.FloatField(default=None, null=True)
-
+    objects = models.GeoManager()
 
     def __str__(self):
         return "%s %s"%(self.current_name, self.advisory_id)

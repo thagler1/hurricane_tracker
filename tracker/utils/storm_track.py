@@ -13,3 +13,9 @@ def add_track_init():
         except:
             print(storm.stormid)
 
+def define_coords():
+    advs = Advisory.objects.all()
+    for a in advs:
+        a.coordinates = (a.long, a.lat)
+        a.save()
+
