@@ -1,17 +1,12 @@
-from django.shortcuts import render, render_to_response
-from .utils.ftpscrape import update_data
-from .utils import archive_scrape
-from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from .utils import storm_query
 import datetime
 from .models import Storm, Advisory, Posts
 import json
+from django.core.serializers import serialize
 
-from random import randint
-from django.views.generic import TemplateView
-from chartjs.views.lines import BaseLineChartView
+
 # Create your views here.
 
 
@@ -45,6 +40,10 @@ def stormdata(request, stormid):
     def date_handler(obj):
         return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
+    geojson = serialize('geojson', storm,
+              geometry_field='path',
+              fields=('stormid',))
+
     adv = Storm.objects.get(stormid=stormid).all_advisories()
 
     x = [a.date for a in adv]
@@ -64,7 +63,8 @@ def stormdata(request, stormid):
         'x': json.dumps(x, default=date_handler),
         'y': json.dumps(y),
         'speed_y': json.dumps(speed_y),
-        'advisory':adv
+        'advisory':adv,
+        'geojson':geojson,
 
     }
 

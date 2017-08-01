@@ -18,6 +18,9 @@ from django.contrib import admin
 from tracker import views
 from django.conf import settings
 from django.conf.urls.static import static
+from djgeojson.views import GeoJSONLayerView
+from tracker.models import Storm
+
 
 urlpatterns = [
     url(r'^$', views.update),
@@ -26,7 +29,8 @@ urlpatterns = [
     url(r'^about/', views.about),
     url(r'^admin/', admin.site.urls),
     url(r'^stormviz/(?P<stormid>[a-z]{2}[0-9]{6})', views.stormviz),
-    url(r'^data/', views.data_viz)
+    url(r'^data/', views.data_viz),
+
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
