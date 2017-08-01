@@ -19,15 +19,17 @@ def update(request):
     inactive_storms = Storm.objects.filter(active=False, year=datetime.date.today().year)
     template = loader.get_template('index.html')
     basin_stats = storm_query.basin_activity_stats()
-    context ={
-        'active_storm': active_storm,
-        'inactive_storms': inactive_storms,
-        'basin_stats':basin_stats
-    }
-
     geojson = serialize('geojson', active_storm,
               geometry_field='path',
               fields=('stormid',))
+    context ={
+        'active_storm': active_storm,
+        'inactive_storms': inactive_storms,
+        'basin_stats':basin_stats,
+        'geojson':geojson
+    }
+
+
     return HttpResponse(template.render(context, request))
 
 
