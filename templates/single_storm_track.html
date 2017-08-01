@@ -17,8 +17,8 @@
                                 id: 'mapbox.satellite'
                 }).addTo(mymap);
 
-                var storm_track = {{ geojson }};
-                storm_track.addTo(mymap)
+                L.geoJSON({{ geojson }}).addTo(map);
+
 
 
 
