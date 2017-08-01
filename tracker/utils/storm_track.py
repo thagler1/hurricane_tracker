@@ -6,7 +6,7 @@ def add_track_init():
 
     for storm in storms:
         try:
-            advs = storm.get_advisories()
+            advs = storm.all_advisories()
             coords = LineString([(a.long, a.lat) for a in advs])
             storm.path = coords
             storm.save()
