@@ -148,9 +148,14 @@ def check_advisory(advisory_num, advisory_id, storm,):
                                 content=content)
 
         new_advisory.save()
+        return (long, lat)
 
 
 def check_storm(stormid):
+
+
+
+
     if not Storm.objects.filter(stormid=stormid).exists():
         cyclone_num = stormid[:2]
         cyclone_num = cyclone_num[:-4]
@@ -160,19 +165,11 @@ def check_storm(stormid):
                          annual_cyclone_number=1,
                          year = 2017
                          )
-        a = newstorm.all_advisories()
-        coords = LineString((a.long, a.lat),(a.long, a.lat))
-        newstorm.path = coords
-
         newstorm.save()
         return newstorm
     else:
-        storm = Storm.objects.get(stormid=stormid)
-        advs = storm.all_advisories()
-        coords = LineString([(a.long, a.lat) for a in advs])
-        storm.path = coords
-        storm.save()
-        return storm
+        return Storm.objects.get(stormid=stormid)
+
 
 
 
@@ -189,7 +186,18 @@ def update_data():
         stormid, type, advisory_num = ftpfile.split(".")
 
         storm = check_storm(stormid)
-        check_advisory(advisory_num, ftpfile, storm)
+        coords = check_advisory(advisory_num, ftpfile, storm)
+        if storm.path:
+            advs = storm.all_advisories()
+            if advs.count()>1:
+                coord = LineString([(a.long, a.lat) for a in advs])
+                storm.path.append(coords)
+
+
+        else:
+            coord = LineString([coords, coords])
+        storm.path = coord
+        storm.save()
 
 
 def correct_long():
