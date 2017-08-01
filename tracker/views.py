@@ -25,7 +25,9 @@ def update(request):
         'basin_stats':basin_stats
     }
 
-
+    geojson = serialize('geojson', active_storm,
+              geometry_field='path',
+              fields=('stormid',))
     return HttpResponse(template.render(context, request))
 
 

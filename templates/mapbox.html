@@ -16,6 +16,7 @@
 
                                 id: 'mapbox.satellite'
                 }).addTo(mymap);
+                 L.geoJSON({{ geojson|safe }}).addTo(mymap);
 
 
 
