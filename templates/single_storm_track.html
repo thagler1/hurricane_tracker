@@ -8,19 +8,11 @@
 <div id="mapid" style="width: 100%; height: 500px"></div>
                 <script>
 
-
-
-
-
                 var mymap = L.map('mapid').setView([29, -97], 3);
-
-
                 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoidGhhZ2xlciIsImEiOiJjaXU3N3F6NTcwaWF0MnpsaHpnY2xsMTNrIn0.kmD7jA6bL2R0YtXOervA1Q', {
                                 maxZoom: 18,
-
                                 id: 'mapbox.satellite'
                 }).addTo(mymap);
-
                 L.geoJSON({{ geojson|safe }},
                     {
                          style: function (feature) {

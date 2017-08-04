@@ -194,6 +194,7 @@ def update_data():
 
         else:
             coord = LineString([coords, coords])
+        print("%s %s"%(storm, coord))
         storm.path = coord
         storm.save()
 
