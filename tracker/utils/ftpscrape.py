@@ -188,7 +188,7 @@ def update_data():
         storm = check_storm(stormid)
         coords = check_advisory(advisory_num, ftpfile, storm)
         advs = storm.all_advisories()
-        if storm.path and advs>1:
+        if storm.path and advs.count()>1:
 
             coord = LineString([(a.long, a.lat) for a in advs])
 
