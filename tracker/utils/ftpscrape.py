@@ -187,7 +187,7 @@ def update_data():
 
         storm = check_storm(stormid)
         coords = check_advisory(advisory_num, ftpfile, storm)
-        print(type(coords))
+        type(coords)
         print(coords)
         advs = storm.all_advisories()
         if storm.path and advs.count()>1:
