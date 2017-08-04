@@ -148,7 +148,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
                                 content=content)
 
         new_advisory.save()
-        return (long, lat)
+        return long, lat
 
 
 def check_storm(stormid):
@@ -196,7 +196,7 @@ def update_data():
 
         else:
 
-            coord = LineString([coords, coords])
+            coord = LineString([(advs[0].long, advs[0].lat), (advs[0].long, advs[0].lat)])
         print("%s %s"%(storm, coord))
         storm.path = coord
         storm.save()
