@@ -44,7 +44,7 @@ def normalize_time(timezone, datetime_obj):
     return datetime_obj +datetime.timedelta(hours =timezones[timezone] )
 
 
-def connect():
+def connect(year):
     print("attempting to connect..")
     base_url = 'ftp.nhc.noaa.gov'
     try:
@@ -54,7 +54,7 @@ def connect():
     except:
         print("failed to connect to %s"%(base_url))
     print("logged in..")
-    ftp.cwd('atcf/archive/2015/messages/')
+    ftp.cwd('atcf/archive/'+str(year)+'/messages/')
     print("switching directories")
 
     return ftp
@@ -106,7 +106,7 @@ def format_pressure(row):
 
 
 
-def check_advisory(advisory_num, advisory_id, storm,):
+def check_advisory(advisory_num, advisory_id, storm,year):
     if not Advisory.objects.filter(advisory_id=advisory_id).exists():
         # storm has been seen before, advisory has not. Add Advisory
         fp = []
@@ -122,7 +122,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
                 location, lat, long = format_location(row)
             elif "MAXIMUM SUSTAINED WINDS..." in row:
                 max_s_winds = format_max_sustained_winds(row)
-            elif " 2015" in row and len(row.split()) == 7:
+            elif " "+str(year) in row and len(row.split()) == 7:
                 date_dict = format_date(row)
             elif 'ADVISORY NUMBER' in row:
                 category, name = classify_storm(row)
@@ -157,7 +157,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
         new_advisory.save()
 
 
-def check_storm(stormid):
+def check_storm(stormid, year):
     if not Storm.objects.filter(stormid=stormid).exists():
         cyclone_num = stormid[:2]
         cyclone_num = cyclone_num[:-4]
@@ -165,7 +165,7 @@ def check_storm(stormid):
         newstorm = Storm(stormid=stormid,
                          region=stormid[:2],
                          annual_cyclone_number=1,
-                         year = 2015
+                         year = year
                          )
 
         newstorm.save()
@@ -178,8 +178,8 @@ def check_storm(stormid):
 
 
 
-def update_data():
-    ftp = connect()
+def update_data(year):
+    ftp = connect(year)
     dir_files = ftp.nlst() #these are the file names in str format
     ftp.close()
 
@@ -189,11 +189,9 @@ def update_data():
 
             stormid, type, advisory_num, *rest = ftpfile.split(".")
 
-            storm = check_storm(stormid)
-            check_advisory(advisory_num, ftpfile, storm)
-            coords = check_advisory(advisory_num, ftpfile, storm)
+            storm = check_storm(stormid, year)
+            check_advisory(advisory_num, ftpfile, storm, year)
 
-            print(coords)
             advs = storm.all_advisories()
             if storm.path and advs.count() > 1:
 
@@ -208,7 +206,10 @@ def update_data():
 
 
 
-
+years = [2014, 2016, 2013]
+def start():
+    for year in years:
+        update_data(year)
 
 
 
