@@ -1,6 +1,7 @@
 import ftplib
 from ..models import Storm, Advisory
 import datetime
+from django.contrib.gis.geos import LineString, GEOSGeometry
 
 
 
@@ -83,7 +84,10 @@ def format_date(row):
 
 def format_location(row):
     coords = row.split('...')
-    return coords[1]
+    xy = coords[1]
+    x = xy.split()[0]
+    y = xy.split()[1]
+    return xy, float(x[:-1]), float(y[:-1])*-1
 
 def format_max_sustained_winds(row):
     trash, spd , km= row.split('...')
@@ -183,6 +187,20 @@ def update_data():
 
             storm = check_storm(stormid)
             check_advisory(advisory_num, ftpfile, storm)
+            coords = check_advisory(advisory_num, ftpfile, storm)
+
+            print(coords)
+            advs = storm.all_advisories()
+            if storm.path and advs.count() > 1:
+
+                coord = LineString([(a.long, a.lat) for a in advs])
+
+            else:
+
+                coord = LineString([(advs[0].long, advs[0].lat), (advs[0].long, advs[0].lat)])
+            print("%s %s" % (storm, coord))
+            storm.path = coord
+            storm.save()
 
 
 
