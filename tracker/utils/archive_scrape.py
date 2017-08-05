@@ -153,7 +153,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
                                 long=long,
                                 coordinates=GEOSGeometry('POINT(%s %s)' % (long, lat), srid=4326),
                                 content=content)
-                                content=content)
+
         new_advisory.save()
 
 
