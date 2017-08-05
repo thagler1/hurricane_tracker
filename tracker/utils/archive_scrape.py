@@ -119,7 +119,7 @@ def check_advisory(advisory_num, advisory_id, storm,):
 
             content = "\n".join([content, row])
             if "LOCATION..." in row:
-                location = format_location(row)
+                location, lat, long = format_location(row)
             elif "MAXIMUM SUSTAINED WINDS..." in row:
                 max_s_winds = format_max_sustained_winds(row)
             elif " 2015" in row and len(row.split()) == 7:
@@ -149,6 +149,10 @@ def check_advisory(advisory_num, advisory_id, storm,):
                                 max_sus_wind=max_s_winds,
                                 category=category,
                                 current_name = name,
+                                lat=lat,
+                                long=long,
+                                coordinates=GEOSGeometry('POINT(%s %s)' % (long, lat), srid=4326),
+                                content=content)
                                 content=content)
         new_advisory.save()
 
