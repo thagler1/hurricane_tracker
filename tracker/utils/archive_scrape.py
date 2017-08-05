@@ -110,7 +110,7 @@ def check_advisory(advisory_num, advisory_id, storm,year):
     if not Advisory.objects.filter(advisory_id=advisory_id).exists():
         # storm has been seen before, advisory has not. Add Advisory
         fp = []
-        ftp = connect()
+        ftp = connect(year)
         ftp.retrbinary('RETR ' + advisory_id, lambda s, w=fp.append: w(str(s)))
         ftp.close()
         category = 0
