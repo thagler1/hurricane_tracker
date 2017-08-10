@@ -5,6 +5,7 @@ import datetime
 from .models import Storm, Advisory, Posts
 import json
 from django.core.serializers import serialize
+from .utils.slack_bot import post_to_slack
 
 
 # Create your views here.
@@ -15,6 +16,7 @@ def update(request):
     #archive_scrape.update_data()
 
     active_storm = storm_query.find_active_advisory()
+    post_to_slack("someone is viewing the page")
 
     inactive_storms = Storm.objects.filter(active=False, year=datetime.date.today().year)
     template = loader.get_template('index.html')
