@@ -2,6 +2,7 @@ import ftplib
 from ..models import Storm, Advisory
 import datetime
 from django.contrib.gis.geos import LineString, GEOSGeometry
+from .slack_bot import post_to_slack
 
 
 
@@ -157,6 +158,7 @@ def check_storm(stormid):
 
 
     if not Storm.objects.filter(stormid=stormid).exists():
+        post_to_slack("****New storm found %s"%(stormid))
         cyclone_num = stormid[:2]
         cyclone_num = cyclone_num[:-4]
         print(cyclone_num)
