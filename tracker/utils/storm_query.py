@@ -1,6 +1,6 @@
 from ..models import Storm, Advisory
 import datetime
-import operator
+from .slack_bot import post_to_slack
 
 
 def find_active_advisory():
@@ -20,7 +20,9 @@ def find_active_advisory():
     for event in all_storms:
         if event not in storm:
             event.active = False
+            post_to_slack("****%s is no longer active"%(event.stormid))
             event.save()
+
 
     return all_storms
 
