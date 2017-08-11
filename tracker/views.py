@@ -16,8 +16,6 @@ def update(request):
     #archive_scrape.update_data()
 
     active_storm = storm_query.find_active_advisory()
-    post_to_slack("someone is viewing the page")
-
     inactive_storms = Storm.objects.filter(active=False, year=datetime.date.today().year)
     template = loader.get_template('index.html')
     basin_stats = storm_query.basin_activity_stats()
