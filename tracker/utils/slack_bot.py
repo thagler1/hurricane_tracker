@@ -13,7 +13,7 @@ def post_to_slack(text, channel):
 
 
     slack_data = {'text': text}
-
+    print(channels)
     response = requests.post(
         channels[channel], data=json.dumps(slack_data),
         headers={'Content-Type': 'application/json'}

@@ -5,15 +5,15 @@ from django.contrib.gis.geos import LineString, GEOSGeometry
 from .slack_bot import post_to_slack
 
 
-
 def classify_storm(row):
     print(row)
     choices = Advisory.category_choices
     category = [(value, key) for value, key in choices if key in row]
     try:
-        name = row[row.index(category[0][1])+len(category[0][1]):row.index('Advisory')]
+        name = row[row.index(category[0][1]) + len(category[0][1]):row.index('Advisory')]
     except Exception as e:
-        post_to_slack(e + row, 'error')
+        post_to_slack(e, 'error')
+
     name = name.rstrip()
     name = name.lstrip()
     return category[0][0], name
