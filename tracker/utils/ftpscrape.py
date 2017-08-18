@@ -13,7 +13,7 @@ def classify_storm(row):
     try:
         name = row[row.index(category[0][1])+len(category[0][1]):row.index('Advisory')]
     except Exception as e:
-        post_to_slack(e + row)
+        post_to_slack(e + row, 'error')
     name = name.rstrip()
     name = name.lstrip()
     return category[0][0], name
@@ -161,7 +161,7 @@ def check_storm(stormid):
 
 
     if not Storm.objects.filter(stormid=stormid).exists():
-        post_to_slack("****New storm found %s"%(stormid))
+        post_to_slack("****New storm found %s"%(stormid), 'spotter')
         cyclone_num = stormid[:2]
         cyclone_num = cyclone_num[:-4]
         print(cyclone_num)
