@@ -12,8 +12,8 @@ def classify_storm(row):
     try:
         name = row[row.index(category[0][1]) + len(category[0][1]):row.index('Advisory')]
     except Exception as e:
-        post_to_slack(e, 'error')
-
+        post_to_slack('error in name row', 'error')
+	post_to_slack(str(row), 'error')
     name = name.rstrip()
     name = name.lstrip()
     return category[0][0], name
