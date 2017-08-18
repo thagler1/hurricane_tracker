@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import ftplib
 from ..models import Storm, Advisory
 import datetime
@@ -245,7 +244,7 @@ def missing_cet_press():
                 print(pressure)
 
 
-=======
+
 import ftplib
 from ..models import Storm, Advisory
 import datetime
@@ -495,4 +494,4 @@ def missing_cet_press():
                 print(pressure)
 
 
->>>>>>> adad3e4f33efd1088a96d4c70fd4d026f262c00c
+
