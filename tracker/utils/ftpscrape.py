@@ -15,10 +15,11 @@ def classify_storm(row):
         name = name.lstrip()
         return category[0][0], name
     except Exception as e:
-        post_to_slack(e, 'error')
+        post_to_slack('error in name', 'error')
         post_to_slack(str(row), 'error')
 
 
+    #test of uploading
 
 
 
@@ -190,22 +191,24 @@ def update_data():
     # scroll through missing ftp files and build data set
     for ftpfile in dir_files[1:]:
         stormid, type, advisory_num = ftpfile.split(".")
+        try:
+            storm = check_storm(stormid)
+            coords = check_advisory(advisory_num, ftpfile, storm)
 
-        storm = check_storm(stormid)
-        coords = check_advisory(advisory_num, ftpfile, storm)
+            print(coords)
+            advs = storm.all_advisories()
+            if storm.path and advs.count()>1:
 
-        print(coords)
-        advs = storm.all_advisories()
-        if storm.path and advs.count()>1:
+                coord = LineString([(a.long, a.lat) for a in advs])
 
-            coord = LineString([(a.long, a.lat) for a in advs])
+            else:
 
-        else:
-
-            coord = LineString([(advs[0].long, advs[0].lat), (advs[0].long, advs[0].lat)])
-        print("%s %s"%(storm, coord))
-        storm.path = coord
-        storm.save()
+                coord = LineString([(advs[0].long, advs[0].lat), (advs[0].long, advs[0].lat)])
+            print("%s %s"%(storm, coord))
+            storm.path = coord
+            storm.save()
+        except Exception as e:
+            post_to_slack("unable to input advisory: %s" %(ftpfile), 'error')
 
 
 def correct_long():
