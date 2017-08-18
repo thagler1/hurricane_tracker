@@ -13,10 +13,11 @@ def post_to_slack(text, channel):
 
 
     slack_data = {'text': text}
-
+    print("printing channel %s"%(channel))
+    print(channels[channel])
     response = requests.post(
-        channels[channel],
-        data=json.dumps(slack_data),
+        str(channels[channel]),
+	data=json.dumps(slack_data),
         headers={'Content-Type': 'application/json'}
     )
     if response.status_code != 200:
