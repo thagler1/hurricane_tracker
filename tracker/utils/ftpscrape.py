@@ -10,7 +10,10 @@ def classify_storm(row):
     print(row)
     choices = Advisory.category_choices
     category = [(value, key) for value, key in choices if key in row]
-    name = row[row.index(category[0][1])+len(category[0][1]):row.index('Advisory')]
+    try:
+        name = row[row.index(category[0][1])+len(category[0][1]):row.index('Advisory')]
+    except Exception as e:
+        post_to_slack(e + row)
     name = name.rstrip()
     name = name.lstrip()
     return category[0][0], name
