@@ -134,7 +134,8 @@ class Advisory(models.Model):
     current_name = models.CharField(default=None, null=True, max_length=40)
     lat = models.FloatField(default=None, null=True)
     long = models.FloatField(default=None, null=True)
-    objects = models.GeoManager()
+    
+    
 
     def __str__(self):
         return "%s %s"%(self.current_name, self.advisory_id)
