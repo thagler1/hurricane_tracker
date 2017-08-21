@@ -15,7 +15,7 @@ def classify_storm(row):
         name = name.lstrip()
         return category[0][0], name
     except Exception as e:
-        post_to_slack(e, 'error')
+        post_to_slack(str(e), 'error')
         post_to_slack(str(row), 'error')
 
 
