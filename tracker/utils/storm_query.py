@@ -20,7 +20,7 @@ def find_active_advisory():
     for event in all_storms:
         if event not in storm:
             event.active = False
-            post_to_slack("****%s is no longer active"%(event.stormid))
+            post_to_slack("****%s is no longer active"%(event.stormid), 'spotter')
             event.save()
 
 

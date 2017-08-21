@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'django_crontab',
     'djgeojson',
     'chartjs',
+    'leaflet'
+
+
 ]
 
 MIDDLEWARE = [
@@ -130,7 +133,7 @@ CRONJOBS = [
     ('30 0 * * *', 'hurricane_tracker.cron.noaa_ftp'),
     ('30 3 * * *', 'hurricane_tracker.cron.noaa_ftp'),
     ('30 9 * * *', 'hurricane_tracker.cron.noaa_ftp'),
-    ('3 15 * * *', 'hurricane_tracker.cron.noaa_ftp','>> /home/todd/htracker/htrackerenv/hurricane_tracker/hurricane_tracker/test.txt'),
+    ('3 15 * * *', 'hurricane_tracker.cron.noaa_ftp'),
 
 
 ]
@@ -139,5 +142,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-\
+
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
