@@ -42,10 +42,16 @@ INSTALLED_APPS = [
     'django_crontab',
     'djgeojson',
     'chartjs',
-    'leaflet'
+    'leaflet',
+    'rest_framework',
 
 
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [ ],
+    'PAGE_SIZE': 10
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

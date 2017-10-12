@@ -96,8 +96,28 @@ class Storm(models.Model):
     def max_wind_speed(self):
         adv = Advisory.objects.filter(stormid=self.id).order_by('-max_sus_wind')[0]
         return adv
+
+    def max_wind_speed_api(self):
+        adv = Advisory.objects.filter(stormid=self.id).order_by('-max_sus_wind')[0]
+        return adv.max_sus_wind
+
+
     def all_advisories(self):
         return Advisory.objects.filter(stormid=self.id).order_by('date')
+
+    def storm_data_api(self):
+       advs = Advisory.objects.filter(stormid=self.id).order_by('date')
+       keys = ['max_sus_wind']
+       data_list = []
+       for adv in advs:
+           dict = adv.__dict__
+           for k in keys:
+              data_list.append({'date':adv.date.strftime("%Y-%m-%d-%H"), 'max_sus_wind':dict[k]})
+
+       return data_list
+
+
+
 
     def first_seen(self):
         return Advisory.objects.filter(stormid=self.id).order_by('date')[0]
@@ -172,3 +192,14 @@ class Posts(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class cities(models.Model):
+    name = models.CharField(max_length=100)
+    state = models.CharField(max_length=2)
+    coords = models.PointField(default=None, null=True)
+    population = models.FloatField()
+    objects = models.GeoManager()
+
+    def __str__(self):
+        return self.name + " " + self.state

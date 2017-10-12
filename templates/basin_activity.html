@@ -20,7 +20,7 @@
     var color = Chart.helpers.color;
 
     var myChart = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: dates,
             datasets: [
@@ -30,7 +30,7 @@
                     label: '2015',
                     borderColor:
                 'rgba(255, 99, 132, 0.2)',
-                    fill: false
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)'
 
 
                 },
@@ -39,7 +39,7 @@
                     label:'2016',
                     borderColor:
                     'rgba(54, 162, 235, 0.2)',
-                    fill: false
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)'
 
 
                 },
@@ -48,7 +48,7 @@
                     label:'2017',
                     borderColor:
             'rgba(255, 206, 86, 0.2)',
-                    fill: false
+                    backgroundColor:'rgba(255, 206, 86, 0.2)'
                 },
 
             ]

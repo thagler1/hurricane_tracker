@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+<style>
+    .axis--x path {
+        display: none;
+}
+    .line {
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 1.5 px;
+    }
+</style>
+</head>
+<body>
+<h2>Get Hurricane data</h2>
+
+<button type="button" onclick="loadDoc()">Request data</button>
+<svg width="960" height="500"></svg>
+
+
+<script>
+function loadDoc() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+
+        var data1 = JSON.parse(JSON.stringify(this.responseText));
+        console.log("parsing response");
+        var json1 = JSON.parse(data1);
+        console.log("converted json");
+
+        var svg = d3.select("svg"),
+            margin = {top: 20, right: 80, bottom: 30, left: 50},
+            width = svg.attr("width") - margin.left - margin.right,
+            height = svg.attr("height") - margin.top - margin.bottom,
+            g = svg.append("g").attr('transform', 'translate(' + margin.left + ',' + margin.top + ")");
+
+        var parseTime = d3.timeParse("%Y-%m-%d");
+
+        var x = d3.scaleTime().range([0, width]),
+            y = d3.scaleLinear().range([height, 0]),
+            z = d3.scaleOrdinal(d3.schemeCategory10);
+
+        var line = d3.line()
+            .curve(d3.curveBasis)
+            .x(function (d) {
+                return x(d.date);
+            })
+            .y(function (d) {
+                return y(d.max_sus_wind);
+            });
+
+        var stormid = json1["0"].stormid;
+        var stormdata = new Map();
+        var stormdata = [{
+            id: stormid,
+            values: json1["0"].storm_data_api.map(function (d) {
+                return {date: parseTime(d.date), max_sus_wind: d.max_sus_wind}
+            }),
+        }];
+
+
+        x.domain(d3.extent(stormdata[0].values.map(function (d) {
+            return d.date
+        })));
+        y.domain(d3.extent(stormdata[0].values.map(function (d) {
+            return d.max_sus_wind
+        })));
+
+
+        z.domain(stormdata[0].id);
+
+
+        g.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        g.append("g")
+            .attr("class", "axis axis--y")
+            .call(d3.axisLeft(y))
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", "0.71em")
+            .attr("fill", "#000")
+            .text("Windspeed (mph)");
+
+        var storm = g.selectAll(".storm")
+            .data(stormdata)
+            .enter().append("g")
+            .attr("class", "storm");
+
+        storm.append("path")
+            .attr("class", "line")
+            .attr("d", function (d) {
+                return line(d.values);
+            })
+            .style("stroke", function (d) {
+                return z(d.id);
+            });
+
+        storm.append("text")
+            .datum(function (d) {
+
+                return {id: d.id, value: d.values[d.values.length - 1]};
+            })
+            .attr("transform", function (d) {
+                return "translate(" + x(d.value.date) + "," + y(d.value.max_sus_wind) + ")";
+            })
+            .attr("x", 3)
+            .attr("dy", "0.35em")
+            .style("font", "10px sans-serif")
+            .text(function (d) {
+                return d.id;
+            });
+
+    };
+
+
+    xhttp.open("GET", "http://104.236.67.246:9090/stormstats/al092017?format=json", true);
+    console.log("triggered ajax");
+    xhttp.send();
+
+}
+
+</script>
+
+</body>
+</html>

@@ -6,6 +6,11 @@ from .models import Storm, Advisory, Posts
 import json
 from django.core.serializers import serialize
 from .utils.slack_bot import post_to_slack
+from rest_framework import viewsets
+from .utils.serializers import *
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 # Create your views here.
@@ -140,4 +145,85 @@ def data_viz(request):
     }
 
     return HttpResponse(template.render(context,request))
+
+
+
+class EarthQuakeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that shows all seismic events in the database.
+    """
+
+
+    queryset = Storm.objects.all()
+    serializer_class = StormSerializer
+
+
+@api_view()
+def stormdata_json(request, stormid):
+    '''
+    Return storm meaurements
+    '''
+
+    queryset = Storm.objects.filter(stormid=stormid)
+    serializer = StormSerializer(queryset, many=True)
+    return Response(serializer.data)
+
+
+def dev_test(request):
+    #needed to get around cross site origin response. delete when done
+
+    context = {}
+    template = loader.get_template('delta_speed_scatterplot.html')
+
+    return HttpResponse(template.render(context, request))
+
+
+@api_view()
+def windspeed(request):
+    '''
+    API for getting windspeed vs storm speed graph
+    '''
+
+    queryset = Advisory.objects.all()
+    serializer = SeasonSerializer(queryset, many=True)
+    return Response(serializer.data)
+
+@api_view()
+def windSpeedDelta(request):
+    '''
+    change in wind speed(delta_wind) vs change in storm movement speed(delta_speed)
+    '''
+
+    storms = Storm.objects.all()
+    delta = []
+    for storm in storms:
+        advs = storm.all_advisories()
+        adv_list= [adv for adv in advs]
+        count = advs.count()
+        for i, adv in enumerate(adv_list):
+            if i+1 < count:
+                try:
+                    speed1 = adv.speed
+                    speed2 = adv_list[i+1].speed
+                    dspeed = speed2 - speed1
+                    print(adv.date)
+
+                    windspeed = adv.max_sus_wind
+                    windspeed2 = adv_list[i+1].max_sus_wind
+                    dwind = windspeed2 - windspeed
+
+                    delta.append({'delta_speed':dspeed, 'delta_wind':dwind})
+                except:
+                    pass
+    serializers = DeltaSpeedSerializer(delta, many=True)
+    return Response(serializers.data)
+
+def threejshw(request):
+
+    template = loader.get_template('threejshw.html')
+    context ={
+
+    }
+    return HttpResponse(template.render(context, request))
+
 

@@ -1,0 +1,498 @@
+<html>
+        <head>
+            <title>Three.JS Homework</title>
+            <style>
+                body { margin: 0; }
+                canvas { width: 100%; height: 100% }
+            </style>
+{% load static %}
+            <script src={% static 'tracker/js/three.js' %}></script>
+            <script src={% static "tracker/js/color_gradiant.js" %}></script>
+
+            <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
+            <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet">
+
+
+
+
+        </head>
+        <body>
+
+            <div id="page-wrapper">
+
+                        <h1>Import CSV</h1>
+                        <div>
+                            Select a CSV file:
+                            <input type="file" id="fileInput">
+
+            <script>
+
+                ///////////
+                // Create Scene
+                ///////////
+
+
+                var scene = new THREE.Scene();
+                var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 1000 );
+                var mouse = new THREE.Vector2(), INTERSECTED;
+                var radius = 100, theta = 0;
+                var font;
+                var domains;
+                camera.position.set(20, 20,20);
+                camera.rotation.y = 90*(3.14/180);
+                camera.lookAt(scene.position);
+
+
+
+                var renderer = new THREE.WebGLRenderer({
+                    antialias: true
+                });
+
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                document.body.appendChild( renderer.domElement );
+                controls = new THREE.OrbitControls(camera, renderer.domElement); // pan tilt zoom
+                raycaster = new THREE.Raycaster(); // mouseover events
+                document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+                //////////////
+                // Add Text //
+                /////////////
+                function addText(){
+                    textGeo = new THREE.TextBufferGeometry( 'text test', {
+					font: font,
+					size: 2,
+					height: 2,
+
+					material: 0,
+					extrudeMaterial: 1
+
+                                })
+
+                    materials =new  THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } ) // front
+                    textMesh1 = new THREE.Mesh( textGeo, materials );
+                    scene.add(textMesh1);
+                }
+
+
+                /////////////
+                // Function to create new bars
+                /////////////
+
+
+                function createBar(jsonrow, domains){
+                    x = parseFloat(jsonrow[domains.xtitle]);
+                    y = parseFloat(jsonrow[domains.ytitle]);
+                    z = parseFloat(jsonrow[domains.ztitle]);
+                    //BoxGeometry (width, height, depth)
+                    var geometry = new THREE.BoxGeometry( 1, 1, z/100000,1,1,z/100000 );
+                    geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, 0));
+
+                    var rainbow = new Rainbow();
+                    rainbow.setSpectrum('#f9d6cf', '#f72c20');
+                    rainbow.setNumberRange(domains.zmin, domains.zmax);
+
+
+                    var material = new THREE.MeshPhongMaterial( { color: '#'+rainbow.colourAt(z)} );
+
+                    id = new THREE.Mesh(geometry, material);
+
+                    id.position.x = x-.5;
+                    id.position.y = y-.5;
+                    id.position.z = 0+((z/100000)/2); // this keeps it above the z axis
+                    id.name = "bar-" + y + x;
+                    id.castShadow = true;
+                    id.receiveShadow = true;
+                    id.vertexColors ='#000000';
+
+
+                    scene.add(id);
+
+
+                    };
+
+                ///////////////////
+                // Create Floor //
+                /////////////////
+
+                function createFloor() {
+
+                    var geometry = new THREE.BoxGeometry(2000, 2000, 2000);
+                    var material = new THREE.MeshPhongMaterial({
+                    color: 0xcccccc,
+                    shininess: 50
+                    });
+                    material.side = THREE.BackSide
+
+                    floor = new THREE.Mesh(geometry, material);
+
+
+                    floor.position.set(-500,-500,1000);
+                    floor.rotation.x = THREE.Math.degToRad(90);
+
+                    floor.receiveShadow = true;
+
+                    scene.add(floor);
+                }
+
+                ///////////////////
+                // Create Light //
+                //////////////////
+
+                function createLight() {
+
+                    var ambient = new THREE.AmbientLight(0x999999);
+                    var spot = new THREE.SpotLight({
+                    color: 0xffffff,
+                    intensity: 1
+                    });
+
+                    spot.position.set(180, 100, 100);
+                    spot.castShadow = true;
+
+                    //spot.shadowDarkness = 1;
+                    var lightHelper = new THREE.DirectionalLightHelper(spot);
+                    scene.add(lightHelper);
+                    scene.add(ambient, spot);
+                }
+
+                ///////////////
+                // Create Grid//
+                ////////////////
+
+                function createGridX(domains){
+                    var size;
+                    if(domains.xmax > domains.ymax){
+                        size = domains.xmax;
+                    } else{size = domains.ymax}
+
+                    if(domains.zmax/100000 > size){
+                        size = domains.zmax/100000;
+                    }
+
+
+                    var divisions = size;
+                    /// x axis
+                    var grid = new THREE.GridHelper( size, divisions );
+                    var axis = new THREE.Vector3(0.0,0.0,0);//tilted a bit on x and y - feel free to plug your different axis here
+                    //in your update/draw function
+
+                    //grid.rotateOnAxis(axis,0);
+                    grid.position.x = size/2;
+                    grid.position.y = 0+size;
+                    grid.position.z = 0 +size/2;
+                    scene.add( grid );
+
+                    // y axis
+                    var Ygrid = new THREE.GridHelper( size, divisions );
+                    //var axis = new THREE.Vector3(0.0,);//tilted a bit on x and y - feel free to plug your different axis here
+                    //in your update/draw function
+
+                    Ygrid.rotation.z += 90*(3.14/ 180);
+                    Ygrid.position.x = 0;
+                    Ygrid.position.y = 0 + size/2;
+                    Ygrid.position.z = 0 + size/2;
+                    scene.add( Ygrid );
+
+
+                     // z axis
+                     var Zgrid = new THREE.GridHelper( size, divisions );
+                    //var axis = new THREE.Vector3(0.0,);//tilted a bit on x and y - feel free to plug your different axis here
+                    //in your update/draw function
+
+                    Zgrid.rotation.x += 90*(3.14/ 180);
+                    Zgrid.position.x = 0 + size/2;
+                    Zgrid.position.y = size/2;
+                    Zgrid.position.z = 0;
+                    scene.add( Zgrid );
+                                    }
+
+
+
+
+                ///////////////
+                // Import CSV//
+                ///////////////
+                function csvJSON(csv){
+
+                    var lines=csv.split("\n");
+                    var result = [];
+                    var head1 = lines[0].replace(/[.]/g, "_"); //strip out unwanted character
+                    var head = head1.replace(/[(|)|\r]/g, "")
+                    var headers=head.split(",");
+
+
+                    for(var i=1;i<lines.length;i++){
+                        var obj = {};
+                        var currentline=lines[i].split(",");
+
+                        for(var j=0;j<headers.length;j++){
+                            dataError = false;
+                            if (currentline[j]==''){dataError=true};
+                            obj[headers[j]] = currentline[j];
+                        }
+                        if (dataError){}
+                        else {
+                            result.push(obj);
+                        }
+                    }
+
+                    //return result; //JavaScript object
+                    return JSON.stringify(result); //JSON
+                    }
+
+                // Tiggered by uploading file
+                window.onload = function() {
+                    var fileInput = document.getElementById('fileInput');
+
+
+                    fileInput.addEventListener('change', function(e) {
+                    var file = fileInput.files[0];
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        //upload us asyn, this is triggered after file loads
+                        rdata = reader.result; //raw
+                        data = csvJSON(rdata); //processed
+                        json = JSON.parse(data);
+                        controls.update();
+                        domains = calcDomains(json);
+                        createGridX(domains);
+                        console.log(domains);
+                        build_chart(json, domains);
+                        loadFont(domains);
+
+
+                                //console.log(scene.children)
+
+                                }
+
+                            reader.readAsText(file);
+
+                            });
+                        }
+
+                function build_chart(jdata, domains){
+                    jdata.forEach(function(d) {
+
+                    try{
+                      createBar(d, domains);
+                    }
+                    catch(err){ console.log(err)}
+
+                    });
+                    }
+
+
+
+                /////////
+                // Animation Function
+                /////////
+                //camera.position.z = 15;
+
+
+                var animate = function () {
+                    requestAnimationFrame( animate );
+                    //renderer.render(scene, camera); <-- MOVED TO render() for mouse over events
+                    render();
+                    };
+
+
+
+
+                createFloor();
+                createLight();
+
+                //addText();
+                console.log("Text Added")
+                animate();
+
+                    ///////////////
+                    // Helpers ////
+                    //////////////
+                var floorAxis = new THREE.AxisHelper(200)
+                scene.add(floorAxis)
+
+
+
+
+                document.getElementById('button').onclick = function() {
+                    console.log("position");
+                    console.log(camera.position);
+                    console.log("rotation");
+                    console.log(camera.rotation);
+
+                    //controls.target.set(-0.041, 1.9, -1.21);
+                    camera.position.set(-0.041, 1.9, -1.21);
+
+
+                    }
+
+            //////////////
+            // Mouse over functions
+            ////////////////
+
+            function onDocumentMouseMove( event ) {
+				event.preventDefault();
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+			};
+
+            //////////////////////
+            //Render
+            //////////////////
+            function render() {
+                // find intersections
+                /*
+				raycaster.setFromCamera( mouse, camera );
+				var intersects = raycaster.intersectObjects( scene.children, true );
+				if ( intersects.length > 0 ) {
+					if ( INTERSECTED != intersects[ 0 ].object ) {
+                        try{
+						if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+						INTERSECTED = intersects[ 0 ].object;
+						INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+                        INTERSECTED.material.emissive.setHex( 0xff0000 );
+                        }
+                        catch(err){}
+					}
+				} else {
+                    try{
+					if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+                    INTERSECTED = null;
+                    }
+                    catch(err){
+                        INTERSECTED = null;
+                    }
+                }
+                */
+				renderer.render( scene, camera );
+            };
+
+
+            //////////////////
+            // Calc Domains //
+            ////////////////
+
+            function calcDomains(json){
+                keys = Object.keys(json[0]);
+                domains = {'xmin':Infinity,
+                            'xmax': -Infinity,
+                            'ymin': Infinity,
+                            'ymax': -Infinity,
+                            'zmin': Infinity,
+                            'zmax': -Infinity,
+                            'xtitle': keys[0],
+                            'ytitle': keys[1],
+                            'ztitle': keys[2],
+                        };
+                console.log(json.length)
+                //calc xmin
+                for(i=0; i <json.length; i++){
+                    x = parseFloat(json[i][keys[0]]);
+                    y = parseFloat(json[i][keys[1]]);
+                    z = parseFloat(json[i][keys[2]]);
+
+
+                    if( x< domains.xmin ){
+                        domains.xmin = x;
+
+                    };
+
+                    if (x > domains.xmax ){
+                        domains.xmax = x;
+                    };
+
+                    if (y < domains.ymin){
+                        domains.ymin = y;
+                    };
+
+                    if (y > domains.ymax){
+                        domains.ymax = y;
+                    }
+
+                    if (z < domains.zmin){
+                        domains.zmin = z;
+                    };
+
+                    if (z > domains.zmax){
+                        domains.zmax = z;
+                    }
+
+                }
+
+                return domains;
+            }
+
+
+            function loadFont(domains) {
+
+
+                var loader = new THREE.FontLoader();
+
+                        loader.load( "{% static "tracker/fonts/optimer_regular.typeface.json" %}", function ( font ) {
+
+                        label(domains.xtitle, 0, -2,0,1, true, false);
+                        label(domains.ytitle, domains.xmax + 2,0, 0,1, true, true);
+                        label(domains.ztitle, domains.xmax, domains.ymax, domains.zmax/100000 +1,1, false, false);
+
+                        for(var i=domains.xmin; i <= domains.xmax; i++){
+                            label(i, i-1,-1,0,.5, true);
+                        }
+
+                        for(var i=domains.ymin; i <= domains.ymax; i++){
+                            label(i, -1,i-1,0,.5, true);
+                        }
+
+                        for(var i=domains.zmin; i<=domains.zmax; i++){
+                            if (i%100000 ==0){
+                                label(i, domains.xmax, domains.ymax, i/100000, .5);
+
+                            }
+                        }
+
+                            function label(text, x,y,z, size, axis, yaxis) {
+                                //if axis is true, then the label will lay flat
+                                //if yaxis is true then it will rotate to go up the y axis
+                                var rotation = (90 * (3.14 / 180));
+                                var yrotation = 0;
+
+                                if (axis){
+                                    rotation = 0;
+                                }
+
+                                if (yaxis){
+                                    yrotation = (90*(3.14/180));
+                                    console.log("sanity check");
+                                    //mesh.rotation. = 0;
+                                }
+
+
+                                var textGeo = new THREE.TextGeometry(text, {
+
+                                    font: font,
+                                    size: size,
+                                    height: .01,
+                                    curveSegments: .01,
+
+                                    bevelThickness: .01,
+                                    bevelSize: .01,
+                                    bevelEnabled: true
+
+                                });
+
+                                var textMaterial = new THREE.MeshPhongMaterial({color: '#000000'});
+
+                                var mesh = new THREE.Mesh(textGeo, textMaterial);
+                                mesh.position.set(x, y, z);
+                                mesh.rotation.x = rotation;
+                                mesh.rotation.z = yrotation;
+
+
+                                scene.add(mesh);
+                            }
+                        } )};
+
+
+            </script>
+        </body>
+    </html>
