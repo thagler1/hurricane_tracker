@@ -43,7 +43,7 @@ urlpatterns = [
     url(r'^windSpeedDelta/', views.windSpeedDelta),
     url(r'^speedvswind', views.windspeed),
     url(r'^dev_test', views.dev_test),
-    url(r'^threejshs', views.threejshw)
+    url(r'^threejshw', views.threejshw)
 
 
 
